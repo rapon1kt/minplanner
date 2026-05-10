@@ -23,6 +23,10 @@ vi.mock("@/infra/db/mongoose/models", () => ({
   },
 }));
 
+vi.mock("@/infra/db/mongoose/mongoose", () => ({
+  connectMongoose: vi.fn(),
+}));
+
 const createMockFormData = (data: Record<string, string>) => {
   return {
     get: (key: string) => data[key] || null,
@@ -67,7 +71,7 @@ describe("CreateTaskAction", () => {
 
   it("Should return validation error if the title length is more than 50 characters.", async () => {
     const formData = createMockFormData({
-      title: new String(".").repeat(51),
+      title: ".".repeat(51),
     });
 
     const result = await createTaskAction(null, formData);
