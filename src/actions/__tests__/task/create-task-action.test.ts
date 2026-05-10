@@ -64,4 +64,21 @@ describe("CreateTaskAction", () => {
     expect(TaskModel.create).not.toHaveBeenCalled();
     expect(revalidatePath).not.toHaveBeenCalled();
   });
+
+  it("Should return validation error if the title length is more than 50 characters.", async () => {
+    const formData = createMockFormData({
+      title: new String(".").repeat(51),
+    });
+
+    const result = await createTaskAction(null, formData);
+
+    expect(result.success).toBe(false);
+    expect(result.errors).toBeDefined();
+    expect(result.errors?.title).toBeDefined();
+
+    expect(TaskModel.create).not.toHaveBeenCalled();
+    expect(revalidatePath).not.toHaveBeenCalled();
+
+    expect(result.message).toBe("Invalid fields value.");
+  });
 });
