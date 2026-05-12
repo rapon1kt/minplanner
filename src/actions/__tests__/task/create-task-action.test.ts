@@ -39,19 +39,15 @@ describe("CreateTaskAction", () => {
   });
 
   it("Should return a validation error if no title is provided.", async () => {
-    const formData = createMockFormData({
-      title: "",
-    });
+    const formData = createMockFormData({});
     const result = await createTaskAction(null, formData);
 
     expect(result.success).toBe(false);
-    expect(result.errors).toBeDefined();
     expect(result.errors?.title).toBeDefined();
+    expect(result.message).toBe("Invalid fields value.");
 
     expect(TaskModel.create).not.toHaveBeenCalled();
     expect(revalidatePath).not.toHaveBeenCalled();
-
-    expect(result.message).toBe("Invalid fields value.");
   });
 
   it("Should return a validation error if the title length is less than 3 characteres.", async () => {
@@ -61,7 +57,6 @@ describe("CreateTaskAction", () => {
     const result = await createTaskAction(null, formData);
 
     expect(result.success).toBe(false);
-    expect(result.errors).toBeDefined();
     expect(result.errors?.title).toBeDefined();
     expect(result.message).toBe("Invalid fields value.");
 
@@ -77,13 +72,11 @@ describe("CreateTaskAction", () => {
     const result = await createTaskAction(null, formData);
 
     expect(result.success).toBe(false);
-    expect(result.errors).toBeDefined();
     expect(result.errors?.title).toBeDefined();
+    expect(result.message).toBe("Invalid fields value.");
 
     expect(TaskModel.create).not.toHaveBeenCalled();
     expect(revalidatePath).not.toHaveBeenCalled();
-
-    expect(result.message).toBe("Invalid fields value.");
   });
 
   it("Should return a validation error if description length is more than 300 characters", async () => {
