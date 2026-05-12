@@ -29,7 +29,7 @@ vi.mock("@/infra/db/mongoose/mongoose", () => ({
 
 const createMockFormData = (data: Record<string, string>) => {
   return {
-    get: (key: string) => data[key] || null,
+    get: (key: string) => data[key] ?? undefined,
   } as unknown as FormData;
 };
 
