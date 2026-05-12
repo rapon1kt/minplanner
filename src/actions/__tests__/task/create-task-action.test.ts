@@ -85,4 +85,22 @@ describe("CreateTaskAction", () => {
 
     expect(result.message).toBe("Invalid fields value.");
   });
+
+  it("Should return a validation error if description length is more than 300 characters", async () => {
+    const formData = createMockFormData({
+      title: "123",
+      description: ".".repeat(301),
+    });
+
+    const result = await createTaskAction(null, formData);
+
+    expect(result.success).toBe(false);
+    expect(result.errors?.title).not.toBeDefined();
+    expect(result.errors?.description).toBeDefined();
+
+    expect(result.message).toBe("Invalid fields value.");
+
+    expect(TaskModel.create).not.toHaveBeenCalled();
+    expect(revalidatePath).not.toHaveBeenCalled();
+  });
 });
