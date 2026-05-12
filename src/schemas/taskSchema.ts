@@ -8,14 +8,12 @@ const taskSchema = z.object({
   description: z
     .string()
     .max(300, { error: "The description cannot exceed 300 characters." })
-    .optional()
-    .or(z.literal("")),
+    .optional(),
   severity: z
     .enum(["low", "medium", "high"], {
       error: "Select a valid severity.",
     })
-    .optional()
-    .or(z.literal("")),
+    .optional(),
   dueDate: z
     .string()
     .optional()
