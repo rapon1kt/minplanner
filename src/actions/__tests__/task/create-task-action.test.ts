@@ -15,16 +15,6 @@ vi.mock("next/cache", () => ({
   revalidatePath: vi.fn(),
 }));
 
-vi.mock("@/infra/db/mongoose/models", () => ({
-  TaskModel: {
-    create: vi.fn(),
-  },
-}));
-
-vi.mock("@/infra/db/mongoose/mongoose", () => ({
-  connectMongoose: vi.fn(),
-}));
-
 const createMockFormData = (data: Record<string, string>) => {
   return {
     get: (key: string) => data[key] ?? undefined,
