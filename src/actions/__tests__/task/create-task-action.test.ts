@@ -3,14 +3,8 @@ import { createTaskAction } from "@/actions/task";
 import { TaskModel } from "@/infra/db/mongoose/models";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("@/lib/auth", () => ({
-  auth: vi.fn().mockResolvedValue({
-    user: {
-      id: "user_id",
-      name: "user_name",
-      email: "user@mail.com",
-    },
-  }),
+vi.mock("@/lib/verify-auth", () => ({
+  getVerifiedUser: vi.fn(),
 }));
 
 vi.mock("next/cache", () => ({
