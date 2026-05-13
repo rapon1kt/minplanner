@@ -131,4 +131,24 @@ describe("CreateTaskAction", () => {
     expect(TaskModel.create).not.toHaveBeenCalled();
     expect(revalidatePath).not.toHaveBeenCalled();
   });
+
+  it("Should return a validation error if dueDate is before the current day", async () => {
+    const formData = createMockFormData({
+      title: "123",
+      description: "123",
+      severity: "low",
+      dueDate: new Date(2007, 3, 26).toDateString(),
+    });
+
+    const result = await createTaskAction(null, formData);
+
+    expect(result.success).toBe(false);
+    expect(result.errors?.title).not.toBeDefined();
+    expect(result.errors?.description).not.toBeDefined();
+    expect(result.errors?.severity).not.toBeDefined();
+    expect(result.errors?.dueDate).toBeDefined();
+
+    expect(TaskModel.create).not.toHaveBeenCalled();
+    expect(revalidatePath).not.toHaveBeenCalled();
+  });
 });
