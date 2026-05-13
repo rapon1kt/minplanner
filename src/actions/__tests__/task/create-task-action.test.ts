@@ -70,8 +70,7 @@ describe("CreateTaskAction", () => {
     expect(result.success).toBe(false);
     expect(result.errors?.title).toBeDefined();
     expect(result.message).toBe("Invalid fields value.");
-
-    expect(TaskModel.create).not.toHaveBeenCalled();
+    expect(createTaskService).not.toHaveBeenCalled();
     expect(revalidatePath).not.toHaveBeenCalled();
   });
 
@@ -84,8 +83,7 @@ describe("CreateTaskAction", () => {
     expect(result.success).toBe(false);
     expect(result.errors?.title).toBeDefined();
     expect(result.message).toBe("Invalid fields value.");
-
-    expect(TaskModel.create).not.toHaveBeenCalled();
+    expect(createTaskService).not.toHaveBeenCalled();
     expect(revalidatePath).not.toHaveBeenCalled();
   });
 
@@ -99,8 +97,7 @@ describe("CreateTaskAction", () => {
     expect(result.success).toBe(false);
     expect(result.errors?.title).toBeDefined();
     expect(result.message).toBe("Invalid fields value.");
-
-    expect(TaskModel.create).not.toHaveBeenCalled();
+    expect(createTaskService).not.toHaveBeenCalled();
     expect(revalidatePath).not.toHaveBeenCalled();
   });
 
@@ -117,8 +114,7 @@ describe("CreateTaskAction", () => {
     expect(result.errors?.description).toBeDefined();
 
     expect(result.message).toBe("Invalid fields value.");
-
-    expect(TaskModel.create).not.toHaveBeenCalled();
+    expect(createTaskService).not.toHaveBeenCalled();
     expect(revalidatePath).not.toHaveBeenCalled();
   });
 
@@ -137,8 +133,7 @@ describe("CreateTaskAction", () => {
     expect(result.errors?.severity).toBeDefined();
 
     expect(result.message).toBe("Invalid fields value.");
-
-    expect(TaskModel.create).not.toHaveBeenCalled();
+    expect(createTaskService).not.toHaveBeenCalled();
     expect(revalidatePath).not.toHaveBeenCalled();
   });
 
@@ -157,8 +152,7 @@ describe("CreateTaskAction", () => {
     expect(result.errors?.description).not.toBeDefined();
     expect(result.errors?.severity).not.toBeDefined();
     expect(result.errors?.dueDate).toBeDefined();
-
-    expect(TaskModel.create).not.toHaveBeenCalled();
+    expect(createTaskService).not.toHaveBeenCalled();
     expect(revalidatePath).not.toHaveBeenCalled();
   });
 });
