@@ -79,7 +79,7 @@ describe("CreateTaskAction", () => {
     expect(revalidatePath).not.toHaveBeenCalled();
   });
 
-  it("Should return validation error if the title length is more than 50 characters.", async () => {
+  it("Should return a validation error if the title length is more than 50 characters.", async () => {
     const formData = createMockFormData({
       title: ".".repeat(51),
     });
@@ -94,7 +94,7 @@ describe("CreateTaskAction", () => {
     expect(revalidatePath).not.toHaveBeenCalled();
   });
 
-  it("Should return a validation error if description length is more than 300 characters", async () => {
+  it("Should return a validation error if the description length is more than 300 characters", async () => {
     const formData = createMockFormData({
       title: "123",
       description: ".".repeat(301),
@@ -112,7 +112,7 @@ describe("CreateTaskAction", () => {
     expect(revalidatePath).not.toHaveBeenCalled();
   });
 
-  it("Should return a validation error if severity is invalid.", async () => {
+  it("Should return a validation error if the severity is invalid.", async () => {
     const formData = createMockFormData({
       title: "123",
       description: "123",
