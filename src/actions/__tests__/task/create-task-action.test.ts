@@ -7,6 +7,10 @@ vi.mock("@/lib/verify-auth", () => ({
   getVerifiedUser: vi.fn(),
 }));
 
+vi.mock("@/services/task", () => ({
+  createTaskService: vi.fn(),
+}));
+
 vi.mock("next/cache", () => ({
   revalidatePath: vi.fn(),
 }));
