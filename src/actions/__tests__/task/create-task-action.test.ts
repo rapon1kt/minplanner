@@ -50,6 +50,21 @@ describe("CreateTaskAction", () => {
     expect(revalidatePath).not.toHaveBeenCalled();
   });
 
+  it("Should return a validation error if the title is empty.", async () => {
+    const formData = createMockFormData({
+      title: "",
+    });
+
+    const result = await createTaskAction(null, formData);
+
+    expect(result.success).toBe(false);
+    expect(result.errors?.title).toBeDefined();
+    expect(result.message).toBe("Invalid fields value.");
+
+    expect(TaskModel.create).not.toHaveBeenCalled();
+    expect(revalidatePath).not.toHaveBeenCalled();
+  });
+
   it("Should return a validation error if the title length is less than 3 characteres.", async () => {
     const formData = createMockFormData({
       title: "12",
