@@ -2,6 +2,8 @@ import { revalidatePath } from "next/cache";
 import { createTaskAction } from "@/actions/task";
 import { TaskModel } from "@/infra/db/mongoose/models";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { getVerifiedUser } from "@/lib/verify-auth";
+import { createTaskService } from "@/services/task";
 
 vi.mock("@/lib/verify-auth", () => ({
   getVerifiedUser: vi.fn(),
@@ -21,9 +23,31 @@ const createMockFormData = (data: Record<string, string>) => {
   } as unknown as FormData;
 };
 
+const makeValidFormData = () =>
+  createMockFormData({
+    title: "valid_title",
+    dueDate: "valid_dueDate",
+    severity: "valid_severity",
+    description: "valid_description",
+  });
+
+const makeTask = () => ({
+  title: "valid_title",
+  userId: "valid_user_id",
+  dueDate: "valid_dueDate",
+  severity: "valid_severity",
+  description: "valid_description",
+});
+
 describe("CreateTaskAction", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(getVerifiedUser).mockResolvedValue({
+      id: "valid_user_id",
+      name: "valid_user_name",
+      email: "valid_user_email",
+    });
+    vi.mocked(createTaskService).mockResolvedValue(makeTask());
   });
 
   it("Should return a validation error if no title is provided.", async () => {
