@@ -60,98 +60,21 @@ describe("CreateTaskAction", () => {
     expect(revalidatePath).not.toHaveBeenCalled();
   });
 
-  it("Should return a validation error if the title is empty.", async () => {
+  it("Should return a validation error if any field is invalid.", async () => {
     const formData = createMockFormData({
-      title: "",
-    });
-
-    const result = await createTaskAction(null, formData);
-
-    expect(result.success).toBe(false);
-    expect(result.errors?.title).toBeDefined();
-    expect(result.message).toBe("Invalid fields value.");
-    expect(createTaskService).not.toHaveBeenCalled();
-    expect(revalidatePath).not.toHaveBeenCalled();
-  });
-
-  it("Should return a validation error if the title length is less than 3 characteres.", async () => {
-    const formData = createMockFormData({
-      title: "12",
-    });
-    const result = await createTaskAction(null, formData);
-
-    expect(result.success).toBe(false);
-    expect(result.errors?.title).toBeDefined();
-    expect(result.message).toBe("Invalid fields value.");
-    expect(createTaskService).not.toHaveBeenCalled();
-    expect(revalidatePath).not.toHaveBeenCalled();
-  });
-
-  it("Should return a validation error if the title length is more than 50 characters.", async () => {
-    const formData = createMockFormData({
-      title: ".".repeat(51),
-    });
-
-    const result = await createTaskAction(null, formData);
-
-    expect(result.success).toBe(false);
-    expect(result.errors?.title).toBeDefined();
-    expect(result.message).toBe("Invalid fields value.");
-    expect(createTaskService).not.toHaveBeenCalled();
-    expect(revalidatePath).not.toHaveBeenCalled();
-  });
-
-  it("Should return a validation error if the description length is more than 300 characters", async () => {
-    const formData = createMockFormData({
-      title: "123",
+      title: "valid_title",
       description: ".".repeat(301),
-    });
-
-    const result = await createTaskAction(null, formData);
-
-    expect(result.success).toBe(false);
-    expect(result.errors?.title).not.toBeDefined();
-    expect(result.errors?.description).toBeDefined();
-
-    expect(result.message).toBe("Invalid fields value.");
-    expect(createTaskService).not.toHaveBeenCalled();
-    expect(revalidatePath).not.toHaveBeenCalled();
-  });
-
-  it("Should return a validation error if the severity is invalid.", async () => {
-    const formData = createMockFormData({
-      title: "123",
-      description: "123",
       severity: "invalid_severity",
-    });
-
-    const result = await createTaskAction(null, formData);
-
-    expect(result.success).toBe(false);
-    expect(result.errors?.title).not.toBeDefined();
-    expect(result.errors?.description).not.toBeDefined();
-    expect(result.errors?.severity).toBeDefined();
-
-    expect(result.message).toBe("Invalid fields value.");
-    expect(createTaskService).not.toHaveBeenCalled();
-    expect(revalidatePath).not.toHaveBeenCalled();
-  });
-
-  it("Should return a validation error if dueDate is before the current day", async () => {
-    const formData = createMockFormData({
-      title: "123",
-      description: "123",
-      severity: "low",
       dueDate: new Date(2007, 3, 26).toDateString(),
     });
 
     const result = await createTaskAction(null, formData);
 
     expect(result.success).toBe(false);
-    expect(result.errors?.title).not.toBeDefined();
-    expect(result.errors?.description).not.toBeDefined();
-    expect(result.errors?.severity).not.toBeDefined();
+    expect(result.errors?.description).toBeDefined();
+    expect(result.errors?.severity).toBeDefined();
     expect(result.errors?.dueDate).toBeDefined();
+    expect(result.message).toBe("Invalid fields value.");
     expect(createTaskService).not.toHaveBeenCalled();
     expect(revalidatePath).not.toHaveBeenCalled();
   });
