@@ -57,6 +57,7 @@ describe("CreateTaskAction", () => {
     expect(result.errors?.title).toBeDefined();
     expect(result.message).toBe("Invalid fields value.");
     expect(createTaskService).not.toHaveBeenCalled();
+    expect(revalidatePath).not.toHaveBeenCalled();
   });
 
   it("Should return a validation error if the title is empty.", async () => {
