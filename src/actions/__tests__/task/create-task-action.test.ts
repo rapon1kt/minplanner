@@ -111,4 +111,24 @@ describe("CreateTaskAction", () => {
     expect(TaskModel.create).not.toHaveBeenCalled();
     expect(revalidatePath).not.toHaveBeenCalled();
   });
+
+  it("Should return a validation error if severity is invalid.", async () => {
+    const formData = createMockFormData({
+      title: "123",
+      description: "123",
+      severity: "invalid_severity",
+    });
+
+    const result = await createTaskAction(null, formData);
+
+    expect(result.success).toBe(false);
+    expect(result.errors?.title).not.toBeDefined();
+    expect(result.errors?.description).not.toBeDefined();
+    expect(result.errors?.severity).toBeDefined();
+
+    expect(result.message).toBe("Invalid fields value.");
+
+    expect(TaskModel.create).not.toHaveBeenCalled();
+    expect(revalidatePath).not.toHaveBeenCalled();
+  });
 });
