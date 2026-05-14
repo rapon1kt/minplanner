@@ -50,4 +50,21 @@ describe("TaskSchema", () => {
       ]),
     );
   });
+
+  it("Should reject title with less than 3 characters.", () => {
+    const result = taskSchema.safeParse({
+      ...makeValidTaskData(),
+      title: "12",
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error?.issues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          path: ["title"],
+          message: "The title must be at least 3 characters long.",
+        }),
+      ]),
+    );
+  });
 });
