@@ -55,4 +55,18 @@ describe("DeleteTaskService", () => {
       code: "NOT_FOUND",
     });
   });
+
+  it("Should throw AppError 500 if database connection fall", async () => {
+    mockLean.mockRejectedValueOnce(new Error("Lost connection."));
+
+    await expect(
+      deleteTaskService({
+        taskId: mockedTaskId,
+        userId: mockedUserId,
+      }),
+    ).rejects.toMatchObject({
+      statusCode: 500,
+      code: "DATABASE_ERROR",
+    });
+  });
 });
