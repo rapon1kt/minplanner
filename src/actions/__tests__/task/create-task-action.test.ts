@@ -1,6 +1,5 @@
 import { revalidatePath } from "next/cache";
 import { createTaskAction } from "@/actions/task";
-import { TaskModel } from "@/infra/db/mongoose/models";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { getVerifiedUser } from "@/lib/verify-auth";
 import { createTaskService } from "@/services/task";
@@ -26,8 +25,8 @@ const createMockFormData = (data: Record<string, string>) => {
 const makeValidFormData = () =>
   createMockFormData({
     title: "valid_title",
-    dueDate: "valid_dueDate",
-    severity: "valid_severity",
+    dueDate: new Date(2030, 2, 26).toString(),
+    severity: "low",
     description: "valid_description",
   });
 
@@ -77,5 +76,19 @@ describe("CreateTaskAction", () => {
     expect(result.message).toBe("Invalid fields value.");
     expect(createTaskService).not.toHaveBeenCalled();
     expect(revalidatePath).not.toHaveBeenCalled();
+  });
+
+  it("Should call CreateTaskService with validated data and user id.", async () => {
+    const result = await createTaskAction(null, makeValidFormData());
+
+    expect(result.success).toBe(true);
+    expect(result.newTask).toEqual(makeTask());
+    expect(createTaskService).toHaveBeenCalledWith({
+      title: "valid_title",
+      userId: "valid_user_id",
+      severity: "low",
+      dueDate: new Date(2030, 2, 26),
+      description: "valid_description",
+    });
   });
 });
