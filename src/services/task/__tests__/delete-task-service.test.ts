@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import deleteTaskService from "../delete-task-service";
 import { TaskModel } from "@/infra/db/mongoose/models";
-import { AppError } from "@/errors/app-error";
 
 vi.mock("@/infra/db/mongoose/mongoose", () => ({
   connectMongoose: vi.fn(),
