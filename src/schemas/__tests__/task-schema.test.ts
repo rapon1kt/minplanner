@@ -37,4 +37,17 @@ describe("TaskSchema", () => {
       dueDate: undefined,
     });
   });
+
+  it("Should reject missing title.", () => {
+    const result = taskSchema.safeParse({});
+
+    expect(result.success).toBe(false);
+    expect(result.error?.issues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          path: ["title"],
+        }),
+      ]),
+    );
+  });
 });
