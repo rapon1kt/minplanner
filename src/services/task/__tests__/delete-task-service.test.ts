@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import deleteTaskService from "../delete-task-service";
 import { TaskModel } from "@/infra/db/mongoose/models";
+import { AppError } from "@/errors/app-error";
 
 vi.mock("@/infra/db/mongoose/mongoose", () => ({
   connectMongoose: vi.fn(),
@@ -38,6 +39,20 @@ describe("DeleteTaskService", () => {
     expect(TaskModel.findOneAndDelete).toHaveBeenCalledExactlyOnceWith({
       _id: mockedTaskId,
       userId: mockedUserId,
+    });
+  });
+
+  it("Should throw AppError 404 if the task does not exist or belongs to another user", async () => {
+    mockLean.mockReturnValueOnce(null);
+
+    await expect(
+      deleteTaskService({
+        taskId: mockedTaskId,
+        userId: mockedUserId,
+      }),
+    ).rejects.toMatchObject({
+      statusCode: 404,
+      code: "NOT_FOUND",
     });
   });
 });
