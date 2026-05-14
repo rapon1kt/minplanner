@@ -67,4 +67,21 @@ describe("TaskSchema", () => {
       ]),
     );
   });
+
+  it("Should reject title with more than 50 characters.", () => {
+    const result = taskSchema.safeParse({
+      ...makeValidTaskData(),
+      title: ".".repeat(51),
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error?.issues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          path: ["title"],
+          message: "The title cannot exceed 50 characters.",
+        }),
+      ]),
+    );
+  });
 });
