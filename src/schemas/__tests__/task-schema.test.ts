@@ -118,4 +118,21 @@ describe("TaskSchema", () => {
       ]),
     );
   });
+
+  it("Should reject dueDate before the current day.", () => {
+    const result = taskSchema.safeParse({
+      ...makeValidTaskData(),
+      dueDate: new Date(2007, 3, 26).toDateString(),
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error?.issues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          path: ["dueDate"],
+          message: "The due date cannot be earlier than the current day.",
+        }),
+      ]),
+    );
+  });
 });
