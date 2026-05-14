@@ -91,4 +91,9 @@ describe("CreateTaskAction", () => {
       description: "valid_description",
     });
   });
+
+  it("Should revalidate the home path on success.", async () => {
+    await createTaskAction(null, makeValidFormData());
+    expect(revalidatePath).toHaveBeenCalledWith("/");
+  });
 });
