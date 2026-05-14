@@ -51,4 +51,14 @@ describe("CreateTaskService", () => {
 
     expect(task).toEqual(makeTask());
   });
+
+  it("Should throw AppError if TaskModel throws.", async () => {
+    vi.mocked(TaskModel.create).mockRejectedValueOnce(new Error());
+
+    const promise = createTaskService(makeCreateTaskDTO());
+
+    await expect(promise).rejects.toThrow(
+      "It was not possible to create the task at this time.",
+    );
+  });
 });
