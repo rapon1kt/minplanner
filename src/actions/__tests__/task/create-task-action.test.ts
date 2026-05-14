@@ -3,6 +3,7 @@ import { createTaskAction } from "@/actions/task";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { getVerifiedUser } from "@/lib/verify-auth";
 import { createTaskService } from "@/services/task";
+import { AppError } from "@/errors/app-error";
 
 vi.mock("@/lib/verify-auth", () => ({
   getVerifiedUser: vi.fn(),
@@ -95,5 +96,20 @@ describe("CreateTaskAction", () => {
   it("Should revalidate the home path on success.", async () => {
     await createTaskAction(null, makeValidFormData());
     expect(revalidatePath).toHaveBeenCalledWith("/");
+  });
+
+  it("Should return an application error if CreateTaskService throws AppError.", async () => {
+    vi.mocked(createTaskService).mockRejectedValueOnce(
+      new AppError("Database unavailable.", 500, "DATABASE_ERROR"),
+    );
+
+    const result = await createTaskAction(null, makeValidFormData());
+
+    expect(result).toEqual({
+      success: false,
+      message: "Database unavailable.",
+      errorCode: "DATABASE_ERROR",
+    });
+    expect(revalidatePath).not.toHaveBeenCalled();
   });
 });
