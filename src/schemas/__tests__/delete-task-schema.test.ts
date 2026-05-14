@@ -31,4 +31,11 @@ describe("DeleteTaskSchema", () => {
     expect(result.success).toBe(false);
     expect(result.error?.issues[0].message).toBe("Invalid ObjectId.");
   });
+
+  it("Should reject if the id is empty", () => {
+    const emptyId = "";
+    const result = deleteTaskSchema.safeParse({ taskId: emptyId });
+    expect(result.success).toBe(false);
+    expect(result.error?.issues[0].message).toBe("Invalid ObjectId.");
+  });
 });
