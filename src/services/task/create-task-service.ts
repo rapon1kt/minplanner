@@ -15,7 +15,7 @@ export default async function createTaskService(createTaskDTO: CreateTaskDTO) {
 
   try {
     const newTask = await TaskModel.create(createTaskDTO);
-    return newTask.toObject();
+    return newTask;
   } catch (error: unknown) {
     console.error("Internal mongoose error: ", error);
 
