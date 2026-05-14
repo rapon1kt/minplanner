@@ -101,4 +101,21 @@ describe("TaskSchema", () => {
       ]),
     );
   });
+
+  it("Should reject invalid severity.", () => {
+    const result = taskSchema.safeParse({
+      ...makeValidTaskData(),
+      severity: "invalid_severity",
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error?.issues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          path: ["severity"],
+          message: "Select a valid severity.",
+        }),
+      ]),
+    );
+  });
 });
