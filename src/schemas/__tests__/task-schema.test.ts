@@ -84,4 +84,21 @@ describe("TaskSchema", () => {
       ]),
     );
   });
+
+  it("Should reject description with more than 300 characters.", () => {
+    const result = taskSchema.safeParse({
+      ...makeValidTaskData(),
+      description: ".".repeat(301),
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error?.issues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          path: ["description"],
+          message: "The description cannot exceed 300 characters.",
+        }),
+      ]),
+    );
+  });
 });
