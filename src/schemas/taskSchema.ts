@@ -1,6 +1,6 @@
 import z from "zod";
 
-const taskSchema = z.object({
+export const createTaskSchema = z.object({
   title: z
     .string()
     .min(3, { error: "The title must be at least 3 characters long." })
@@ -30,5 +30,3 @@ const taskSchema = z.object({
       { error: "The due date cannot be earlier than the current day." },
     ),
 });
-
-export default taskSchema;
