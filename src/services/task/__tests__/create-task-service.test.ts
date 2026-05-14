@@ -37,4 +37,12 @@ describe("CreateTaskService", () => {
 
     expect(connectMongoose).toHaveBeenCalledOnce();
   });
+
+  it("Should create a task with correct values.", async () => {
+    const createTaskDTO = makeCreateTaskDTO();
+
+    await createTaskService(createTaskDTO);
+
+    expect(TaskModel.create).toHaveBeenCalledWith(createTaskDTO);
+  });
 });
