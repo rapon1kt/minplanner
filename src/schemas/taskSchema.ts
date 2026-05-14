@@ -1,4 +1,9 @@
+import { Types } from "mongoose";
 import z from "zod";
+
+const taskIdSchema = z.string().refine((val) => Types.ObjectId.isValid(val), {
+  error: "Invalid ObjectId.",
+});
 
 export const createTaskSchema = z.object({
   title: z
@@ -29,4 +34,8 @@ export const createTaskSchema = z.object({
       },
       { error: "The due date cannot be earlier than the current day." },
     ),
+});
+
+export const deleteTaskSchema = z.object({
+  taskId: taskIdSchema,
 });
