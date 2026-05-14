@@ -21,6 +21,14 @@ describe("DeleteTaskSchema", () => {
   it("Should reject if the id length have more than 24 chars", () => {
     const bigId = "507f1f77bcf86cd7994390112";
     const result = deleteTaskSchema.safeParse({ taskId: bigId });
+    expect(result.success).toBe(false);
+    expect(result.error?.issues[0].message).toBe("Invalid ObjectId.");
+  });
+
+  it("Should reject if id contains non-hexa chars", () => {
+    const idWithInvalidChars = "507f1fz7bcf86cd799439011";
+    const result = deleteTaskSchema.safeParse({ taskId: idWithInvalidChars });
+    expect(result.success).toBe(false);
     expect(result.error?.issues[0].message).toBe("Invalid ObjectId.");
   });
 });
