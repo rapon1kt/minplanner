@@ -1,4 +1,4 @@
-import { taskSchema } from "@/schemas";
+import { createTaskSchema } from "@/schemas";
 import { describe, expect, it } from "vitest";
 
 const makeValidTaskData = () => ({
@@ -8,9 +8,9 @@ const makeValidTaskData = () => ({
   dueDate: new Date(2030, 2, 26).toDateString(),
 });
 
-describe("TaskSchema", () => {
+describe("CreateTaskSchema", () => {
   it("Should parse valid task data.", () => {
-    const result = taskSchema.safeParse(makeValidTaskData());
+    const result = createTaskSchema.safeParse(makeValidTaskData());
 
     expect(result.success).toBe(true);
     expect(result.data).toEqual({
@@ -22,7 +22,7 @@ describe("TaskSchema", () => {
   });
 
   it("Should accept optional fields as empty values.", () => {
-    const result = taskSchema.safeParse({
+    const result = createTaskSchema.safeParse({
       title: "valid_title",
       description: "",
       severity: undefined,
@@ -39,7 +39,7 @@ describe("TaskSchema", () => {
   });
 
   it("Should reject missing title.", () => {
-    const result = taskSchema.safeParse({});
+    const result = createTaskSchema.safeParse({});
 
     expect(result.success).toBe(false);
     expect(result.error?.issues).toEqual(
@@ -52,7 +52,7 @@ describe("TaskSchema", () => {
   });
 
   it("Should reject title with less than 3 characters.", () => {
-    const result = taskSchema.safeParse({
+    const result = createTaskSchema.safeParse({
       ...makeValidTaskData(),
       title: "12",
     });
@@ -69,7 +69,7 @@ describe("TaskSchema", () => {
   });
 
   it("Should reject title with more than 50 characters.", () => {
-    const result = taskSchema.safeParse({
+    const result = createTaskSchema.safeParse({
       ...makeValidTaskData(),
       title: ".".repeat(51),
     });
@@ -86,7 +86,7 @@ describe("TaskSchema", () => {
   });
 
   it("Should reject description with more than 300 characters.", () => {
-    const result = taskSchema.safeParse({
+    const result = createTaskSchema.safeParse({
       ...makeValidTaskData(),
       description: ".".repeat(301),
     });
@@ -103,7 +103,7 @@ describe("TaskSchema", () => {
   });
 
   it("Should reject invalid severity.", () => {
-    const result = taskSchema.safeParse({
+    const result = createTaskSchema.safeParse({
       ...makeValidTaskData(),
       severity: "invalid_severity",
     });
@@ -120,7 +120,7 @@ describe("TaskSchema", () => {
   });
 
   it("Should reject dueDate before the current day.", () => {
-    const result = taskSchema.safeParse({
+    const result = createTaskSchema.safeParse({
       ...makeValidTaskData(),
       dueDate: new Date(2007, 3, 26).toDateString(),
     });

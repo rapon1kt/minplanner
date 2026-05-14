@@ -1,6 +1,6 @@
 "use server";
 import z from "zod";
-import { taskSchema } from "@/schemas";
+import { createTaskSchema } from "@/schemas";
 import { revalidatePath } from "next/cache";
 import { createTaskService } from "@/services/task";
 import { getVerifiedUser } from "@/lib/verify-auth";
@@ -35,7 +35,7 @@ export default async function createTaskAction(
     description: formData.get("description"),
   };
 
-  const validatedFields = taskSchema.safeParse(rawData);
+  const validatedFields = createTaskSchema.safeParse(rawData);
 
   if (!validatedFields.success) {
     return {
