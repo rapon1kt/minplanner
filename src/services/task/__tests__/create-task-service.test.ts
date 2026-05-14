@@ -45,4 +45,10 @@ describe("CreateTaskService", () => {
 
     expect(TaskModel.create).toHaveBeenCalledWith(createTaskDTO);
   });
+
+  it("Should return a task on success.", async () => {
+    const task = await createTaskService(makeCreateTaskDTO());
+
+    expect(task).toEqual(makeTask());
+  });
 });
