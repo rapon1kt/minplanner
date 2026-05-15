@@ -54,4 +54,16 @@ describe("DeleteTaskAction", () => {
     expect(result.errors?.taskId).toBeDefined();
     expect(result.message).toBe("Invalid TaskId.");
   });
+
+  it("Should return a validation error if taskId is invalid", async () => {
+    const result = await deleteTaskAction(
+      null,
+      createMockFormData({
+        taskId: "507f1f77zcf86cd799439011",
+      }),
+    );
+    expect(result.success).toBe(false);
+    expect(result.errors?.taskId).toBeDefined();
+    expect(result.message).toBe("Invalid TaskId.");
+  });
 });
