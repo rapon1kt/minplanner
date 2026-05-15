@@ -1,4 +1,5 @@
 import { deleteTaskAction } from "@/actions/task";
+import { AppError } from "@/errors/app-error";
 import { getVerifiedUser } from "@/lib/verify-auth";
 import { deleteTaskService } from "@/services/task";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -65,5 +66,29 @@ describe("DeleteTaskAction", () => {
     expect(result.success).toBe(false);
     expect(result.errors?.taskId).toBeDefined();
     expect(result.message).toBe("Invalid TaskId.");
+  });
+
+  it("Should throw AppError if deleteTaskService throws", async () => {
+    vi.mocked(deleteTaskService).mockRejectedValueOnce(
+      new AppError(
+        "It was not possible to delete the task at this time.",
+        500,
+        "DATABASE_ERROR",
+      ),
+    );
+
+    const result = await deleteTaskAction(
+      null,
+      createMockFormData({
+        taskId: "507f1f77fcf86cd799439011",
+        userId: "valid_user_id",
+      }),
+    );
+
+    expect(result).toEqual({
+      success: false,
+      errorCode: "DATABASE_ERROR",
+      message: "It was not possible to delete the task at this time.",
+    });
   });
 });
