@@ -41,4 +41,17 @@ describe("UpdateTaskSchema", () => {
       taskId: "507f1f77bcf86cd799439011",
     });
   });
+
+  it("Should reject missing taskId.", ({ expect }) => {
+    const result = updateTaskSchema.safeParse({});
+
+    expect(result.success).toBe(false);
+    expect(result.error?.issues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          path: ["taskId"],
+        }),
+      ]),
+    );
+  });
 });
