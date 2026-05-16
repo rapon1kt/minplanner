@@ -45,11 +45,15 @@ export const updateTaskSchema = z.object({
   title: z
     .string()
     .min(3, { error: "The title must be at least 3 characters long." })
-    .max(50, { error: "The title cannot exceed 50 characters." }),
+    .max(50, { error: "The title cannot exceed 50 characters." })
+    .optional()
+    .or(z.literal(""))
+    .transform((val) => (val === "" ? undefined : val)),
   description: z
     .string()
     .max(300, { error: "The description cannot exceed 300 characters." })
-    .optional(),
+    .optional()
+    .transform((val) => (val === "" ? undefined : val)),
   severity: z
     .enum(["low", "medium", "high"], {
       error: "Select a valid severity.",
