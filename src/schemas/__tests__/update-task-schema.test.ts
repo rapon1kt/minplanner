@@ -21,4 +21,24 @@ describe("UpdateTaskSchema", () => {
       taskId: "507f1f77bcf86cd799439011",
     });
   });
+
+  it("Should accept optional fields as undefined values.", ({ expect }) => {
+    const result = updateTaskSchema.safeParse({
+      title: "",
+      dueDate: "",
+      description: "",
+      severity: undefined,
+      taskId: "507f1f77bcf86cd799439011",
+    });
+
+    console.log(result);
+    expect(result.success).toBe(true);
+    expect(result.data).toEqual({
+      title: undefined,
+      description: undefined,
+      dueDate: undefined,
+      severity: undefined,
+      taskId: "507f1f77bcf86cd799439011",
+    });
+  });
 });
