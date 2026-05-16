@@ -31,7 +31,6 @@ describe("UpdateTaskSchema", () => {
       taskId: "507f1f77bcf86cd799439011",
     });
 
-    console.log(result);
     expect(result.success).toBe(true);
     expect(result.data).toEqual({
       title: undefined,
