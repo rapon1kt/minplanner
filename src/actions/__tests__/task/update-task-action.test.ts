@@ -52,4 +52,13 @@ describe("UpdateTaskAction", () => {
       message: "Task updated with success.",
     });
   });
+
+  it("Should return a validation error if no taskId is provided", async ({
+    expect,
+  }) => {
+    const result = await updateTaskAction(null, createMockFormData({}));
+    expect(result.success).toBe(false);
+    expect(result.errors?.taskId).toBeDefined();
+    expect(result.message).toBe("Invalid fields.");
+  });
 });
