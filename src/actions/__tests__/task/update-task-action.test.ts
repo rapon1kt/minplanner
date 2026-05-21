@@ -1,5 +1,7 @@
 import updateTaskAction from "@/actions/task/update-task-action";
+import { AppError } from "@/errors/app-error";
 import { getVerifiedUser } from "@/lib/verify-auth";
+import { updateTaskService } from "@/services/task";
 import { revalidatePath } from "next/cache";
 import { beforeEach, describe, it, vi } from "vitest";
 
@@ -74,5 +76,30 @@ describe("UpdateTaskAction", () => {
     expect(result.success).toBe(false);
     expect(result.errors?.taskId).toBeDefined();
     expect(result.message).toBe("Invalid fields.");
+  });
+
+  it("Should throw AppError if updateTaskService throws", async ({
+    expect,
+  }) => {
+    vi.mocked(updateTaskService).mockRejectedValueOnce(
+      new AppError(
+        "It was not possible to update the task at this time.",
+        500,
+        "DATABASE_ERROR",
+      ),
+    );
+
+    const result = await updateTaskAction(
+      null,
+      createMockFormData({
+        taskId: "507f1f77fcf86cd799439011",
+      }),
+    );
+
+    expect(result).toEqual({
+      success: false,
+      errorCode: "DATABASE_ERROR",
+      message: "It was not possible to update the task at this time.",
+    });
   });
 });
