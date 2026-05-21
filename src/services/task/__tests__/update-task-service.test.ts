@@ -63,6 +63,32 @@ describe("UpdateTaskService", () => {
     });
   });
 
+  it("Should return the same task if no property to update is provided", async ({
+    expect,
+  }) => {
+    mockLean.mockResolvedValueOnce({
+      _id: "507f1f77bcf86cd799439011",
+      ...makeUpdateTaskDTO(),
+    });
+
+    const result = await updateTaskService(mockedTaskId, mockedUserId, {});
+
+    expect(connectMongoose).toHaveBeenCalledOnce();
+    expect(TaskModel.findOneAndUpdate).toHaveBeenCalledWith(
+      { _id: mockedTaskId, userId: mockedUserId },
+      { $set: {} },
+      { new: true },
+    );
+    expect(mockLean).toHaveBeenCalledOnce();
+    expect(result).toEqual({
+      success: true,
+      updatedTask: {
+        _id: "507f1f77bcf86cd799439011",
+        ...makeUpdateTaskDTO(),
+      },
+    });
+  });
+
   it("It should throw a task not found error if the task does not exist or belongs to someone else.", async ({
     expect,
   }) => {
