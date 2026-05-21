@@ -90,4 +90,19 @@ describe("UpdateTaskService", () => {
       updateTaskService(mockedTaskId, mockedUserId, makeUpdateTaskDTO()),
     ).rejects.toThrow(customError);
   });
+
+  it("Should throw generic errors as formatted AppError", async ({
+    expect,
+  }) => {
+    const genericError = new Error("Connection lost");
+    mockLean.mockRejectedValueOnce(genericError);
+
+    await expect(
+      updateTaskService(mockedTaskId, mockedUserId, makeUpdateTaskDTO()),
+    ).rejects.toMatchObject({
+      statusCode: 500,
+      code: "DATABASE_ERROR",
+      message: "It was not possible to update the task at this time.",
+    });
+  });
 });
