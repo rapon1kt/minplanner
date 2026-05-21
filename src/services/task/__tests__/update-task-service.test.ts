@@ -2,6 +2,7 @@ import { beforeEach, describe, it, vi } from "vitest";
 import updateTaskService from "../update-task-service";
 import { connectMongoose } from "@/infra/db/mongoose/mongoose";
 import { TaskModel } from "@/infra/db/mongoose/models";
+import { AppError } from "@/errors/app-error";
 
 vi.mock("@/infra/db/mongoose/mongoose", () => ({
   connectMongoose: vi.fn(),
@@ -73,5 +74,20 @@ describe("UpdateTaskService", () => {
       code: "NOT_FOUND",
       statusCode: 404,
     });
+  });
+
+  it("Should throw native exception if is instance of AppError", async ({
+    expect,
+  }) => {
+    const customError = new AppError(
+      "Forced validation error",
+      400,
+      "VALIDATION_ERROR",
+    );
+    mockLean.mockRejectedValueOnce(customError);
+
+    await expect(
+      updateTaskService(mockedTaskId, mockedUserId, makeUpdateTaskDTO()),
+    ).rejects.toThrow(customError);
   });
 });
