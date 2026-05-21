@@ -1,5 +1,7 @@
 import { beforeEach, describe, it, vi } from "vitest";
 import updateTaskService from "../update-task-service";
+import { connectMongoose } from "@/infra/db/mongoose/mongoose";
+import { TaskModel } from "@/infra/db/mongoose/models";
 
 vi.mock("@/infra/db/mongoose/mongoose", () => ({
   connectMongoose: vi.fn(),
@@ -21,6 +23,15 @@ const makeUpdateTaskDTO = () => ({
   severity: "low",
 });
 
+const makeValidUpdatedTask = () => ({
+  _id: "507f1f77bcf86cd799439011",
+  title: "New Title",
+  userId: "valid_user_id",
+  description: "New Description",
+  dueDate: new Date(2067, 3, 26),
+  severity: "high",
+});
+
 describe("UpdateTaskService", () => {
   const mockedUserId = "valid_user_id";
   const mockedTaskId = "507f1f77bcf86cd799439011";
@@ -30,21 +41,24 @@ describe("UpdateTaskService", () => {
   });
 
   it("Should update a task with success", async ({ expect }) => {
-    mockLean.mockResolvedValueOnce({
-      _id: mockedTaskId,
-      title: "Title",
-      userId: mockedUserId,
-      description: "Description",
-      dueDate: new Date(2030, 3, 26),
-      severity: "low",
-    });
+    mockLean.mockResolvedValueOnce(makeValidUpdatedTask());
 
     const result = await updateTaskService(
       mockedTaskId,
       mockedUserId,
       makeUpdateTaskDTO(),
     );
-    expect(result.success).toBe(true);
-    expect(result.updatedTask).toBeDefined();
+
+    expect(connectMongoose).toHaveBeenCalledOnce();
+    expect(TaskModel.findOneAndUpdate).toHaveBeenCalledWith(
+      { _id: mockedTaskId, userId: mockedUserId },
+      { $set: makeUpdateTaskDTO() },
+      { new: true },
+    );
+    expect(mockLean).toHaveBeenCalledOnce();
+    expect(result).toEqual({
+      success: true,
+      updatedTask: makeValidUpdatedTask(),
+    });
   });
 });
