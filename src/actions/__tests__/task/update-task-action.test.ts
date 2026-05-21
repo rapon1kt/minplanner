@@ -61,4 +61,18 @@ describe("UpdateTaskAction", () => {
     expect(result.errors?.taskId).toBeDefined();
     expect(result.message).toBe("Invalid fields.");
   });
+
+  it("Should return a validation error if taskId is invalid", async ({
+    expect,
+  }) => {
+    const result = await updateTaskAction(
+      null,
+      createMockFormData({
+        taskId: "507f1f77zcf86cd799439011",
+      }),
+    );
+    expect(result.success).toBe(false);
+    expect(result.errors?.taskId).toBeDefined();
+    expect(result.message).toBe("Invalid fields.");
+  });
 });
