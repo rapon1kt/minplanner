@@ -61,4 +61,17 @@ describe("UpdateTaskService", () => {
       updatedTask: makeValidUpdatedTask(),
     });
   });
+
+  it("It should throw a task not found error if the task does not exist or belongs to someone else.", async ({
+    expect,
+  }) => {
+    mockLean.mockResolvedValueOnce(null);
+
+    await expect(
+      updateTaskService(mockedTaskId, mockedUserId, makeUpdateTaskDTO()),
+    ).rejects.toMatchObject({
+      code: "NOT_FOUND",
+      statusCode: 404,
+    });
+  });
 });
