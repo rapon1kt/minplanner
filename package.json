@@ -17,6 +17,7 @@
   "dependencies": {
     "@auth/mongodb-adapter": "^3.11.2",
     "dotenv": "^17.4.2",
+    "lucide-react": "^1.16.0",
     "mongodb": "^6.21.0",
     "mongoose": "^9.6.1",
     "next": "16.2.5",
