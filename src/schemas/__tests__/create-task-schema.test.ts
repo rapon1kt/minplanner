@@ -1,11 +1,17 @@
 import { createTaskSchema } from "@/schemas";
 import { describe, expect, it } from "vitest";
 
+const formatDueDate = (year: number, month: number, day: number): Date => {
+  const date = new Date(year, month, day);
+  date.setUTCHours(23, 59, 59, 999);
+  return date;
+};
+
 const makeValidTaskData = () => ({
   title: "valid_title",
   description: "valid_description",
   severity: "low",
-  dueDate: new Date(2030, 2, 26).toDateString(),
+  dueDate: formatDueDate(2030, 2, 26).toDateString(),
 });
 
 describe("CreateTaskSchema", () => {
@@ -17,7 +23,7 @@ describe("CreateTaskSchema", () => {
       title: "valid_title",
       description: "valid_description",
       severity: "low",
-      dueDate: new Date(2030, 2, 26),
+      dueDate: formatDueDate(2030, 2, 26),
     });
   });
 
