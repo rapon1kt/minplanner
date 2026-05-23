@@ -7,6 +7,7 @@ interface UpdateTaskDTO {
   title?: string;
   dueDate?: Date;
   description?: string;
+  isCompleted?: boolean;
   severity?: string;
 }
 
@@ -21,7 +22,7 @@ export default async function updateTaskService(
     const updatedTask = await TaskModel.findOneAndUpdate(
       { _id: taskId, userId },
       { $set: updateTaskDTO },
-      { new: true },
+      { returnDocument: "after" },
     ).lean();
     if (!updatedTask) {
       throw new NotFound("Task not found.");
