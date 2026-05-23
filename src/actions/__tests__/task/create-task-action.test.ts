@@ -23,10 +23,16 @@ const createMockFormData = (data: Record<string, string>) => {
   } as unknown as FormData;
 };
 
+const formatDueDate = (year: number, month: number, day: number): Date => {
+  const date = new Date(year, month, day);
+  date.setUTCHours(23, 59, 59, 999);
+  return date;
+};
+
 const makeValidFormData = () =>
   createMockFormData({
     title: "valid_title",
-    dueDate: new Date(2030, 2, 26).toString(),
+    dueDate: formatDueDate(2030, 2, 26).toDateString(),
     severity: "low",
     description: "valid_description",
   });
@@ -88,7 +94,7 @@ describe("CreateTaskAction", () => {
       title: "valid_title",
       userId: "valid_user_id",
       severity: "low",
-      dueDate: new Date(2030, 2, 26),
+      dueDate: formatDueDate(2030, 2, 26),
       description: "valid_description",
     });
   });
