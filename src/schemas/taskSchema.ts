@@ -23,13 +23,19 @@ export const createTaskSchema = z.object({
     .string()
     .optional()
     .transform((val) => (val === "" ? undefined : val))
-    .transform((val) => (val ? new Date(val) : undefined))
+    .transform((val) => {
+      if (val) {
+        const date = new Date(val);
+        date.setUTCHours(23, 59, 59, 999);
+        return date;
+      }
+      return undefined;
+    })
     .refine(
       (date) => {
         if (!date) return true;
-
         const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        today.setUTCHours(0, 0, 0, 0);
         return date >= today;
       },
       { error: "The due date cannot be earlier than the current day." },
