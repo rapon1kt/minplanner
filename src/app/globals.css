@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+@theme inline {
+  --font-space: var(--font-space);
+  --font-barlow: var(--font-barlow);
+}
