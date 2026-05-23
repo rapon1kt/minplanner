@@ -54,7 +54,7 @@ describe("UpdateTaskService", () => {
     expect(TaskModel.findOneAndUpdate).toHaveBeenCalledWith(
       { _id: mockedTaskId, userId: mockedUserId },
       { $set: makeUpdateTaskDTO() },
-      { new: true },
+      { returnDocument: "after" },
     );
     expect(mockLean).toHaveBeenCalledOnce();
     expect(result).toEqual({
@@ -77,7 +77,7 @@ describe("UpdateTaskService", () => {
     expect(TaskModel.findOneAndUpdate).toHaveBeenCalledWith(
       { _id: mockedTaskId, userId: mockedUserId },
       { $set: {} },
-      { new: true },
+      { returnDocument: "after" },
     );
     expect(mockLean).toHaveBeenCalledOnce();
     expect(result).toEqual({
