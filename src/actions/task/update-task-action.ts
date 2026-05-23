@@ -20,13 +20,11 @@ export default async function updateTaskAction(
   prevState: unknown,
   formData: FormData,
 ): Promise<UpdateTaskResponse> {
-  const rawData = {
-    taskId: formData.get("taskId"),
-    title: formData.get("title"),
-    severity: formData.get("severity"),
-    description: formData.get("description"),
-    dueDate: formData.get("dueDate"),
-  };
+  const rawData = Object.fromEntries(
+    ["taskId", "title", "severity", "description", "dueDate", "isCompleted"]
+      .map((field) => [field, formData.get(field)])
+      .filter(([, value]) => value !== null),
+  );
 
   const validatedFields = updateTaskSchema.safeParse(rawData);
 
