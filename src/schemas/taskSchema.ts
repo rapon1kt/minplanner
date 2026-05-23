@@ -59,6 +59,10 @@ export const updateTaskSchema = z.object({
       error: "Select a valid severity.",
     })
     .optional(),
+  isCompleted: z
+    .enum(["true", "false"])
+    .transform((value: string) => value == "true")
+    .optional(),
   dueDate: z
     .string()
     .optional()
