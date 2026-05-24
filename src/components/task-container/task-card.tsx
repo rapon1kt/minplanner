@@ -16,6 +16,9 @@ const returnSeverityStyle = (severity: string) => {
   }
 };
 
+const capitalizeStr = (str: string): string =>
+  str.charAt(0).toUpperCase() + str.slice(1);
+
 export default function TaskCard({ task }: { task: Task }) {
   return (
     <div className="group flex items-center gap-4 p-4 bg-neutral-900/20 rounded-sm border border-neutral-800 hover:border-neutral-700 transition-all hover:bg-neutral-900/50">
@@ -53,7 +56,7 @@ export default function TaskCard({ task }: { task: Task }) {
           <span className="text-neutral-400">•</span>
           {task.severity && (
             <p className={`font-barlow ${returnSeverityStyle(task.severity)}`}>
-              {task.severity}
+              {capitalizeStr(task.severity)}
             </p>
           )}
         </div>
