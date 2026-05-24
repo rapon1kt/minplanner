@@ -3,4 +3,15 @@
 @theme inline {
   --font-space: var(--font-space);
   --font-barlow: var(--font-barlow);
+  --animate-fade-in: fade-in 0.3s ease-in-out forwards;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
 }
