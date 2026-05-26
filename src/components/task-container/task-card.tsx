@@ -3,17 +3,16 @@ import { Task } from "@/core/domain/models";
 import { dateFormatter } from "@/utils";
 import { CheckCircle2, Circle, Skull, Trash2 } from "lucide-react";
 
-const returnSeverityStyle = (severity: string) => {
-  switch (severity) {
-    case "low":
-      return "text-green-800";
-    case "medium":
-      return "text-amber-800";
-    case "high":
-      return "text-red-800";
-    default:
-      return "text-neutral-100";
-  }
+const severityTextColor = {
+  low: "text-green-800",
+  medium: "text-amber-800",
+  high: "text-red-800",
+} as const;
+
+type SeverityType = "low" | "medium" | "high";
+
+const returnSeverityStyle = (severity: SeverityType) => {
+  return severityTextColor[severity];
 };
 
 const capitalizeStr = (str: string): string =>
@@ -55,7 +54,9 @@ export default function TaskCard({ task }: { task: Task }) {
           </p>
           <span className="text-neutral-400">•</span>
           {task.severity && (
-            <p className={`font-barlow ${returnSeverityStyle(task.severity)}`}>
+            <p
+              className={`font-barlow ${returnSeverityStyle(task.severity as SeverityType)}`}
+            >
               {capitalizeStr(task.severity)}
             </p>
           )}

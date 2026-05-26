@@ -1,11 +1,29 @@
-import { createTask } from "@/actions/task/form-actions";
+"use client";
 import { Plus } from "lucide-react";
+import { useActionState } from "react";
+import CreateTaskFormAlert from "./create-task-form-alert";
+import createTaskAction from "@/actions/task/create-task-action";
+
+import type { CreateTaskFormState } from "./create-task-form-types";
+
+const initialState: CreateTaskFormState = {
+  success: false,
+  message: "",
+};
 
 export default function CreateTaskForm() {
+  const [state, formAction, pending] = useActionState(
+    createTaskAction,
+    initialState,
+  );
+
   return (
     <div className="mb-8">
+      <div className="mb-3">
+        <CreateTaskFormAlert result={state} />
+      </div>
       <form
-        action={createTask}
+        action={formAction}
         className="flex flex-col md:flex-row md:items-end gap-2"
       >
         <div className="flex flex-col gap-1 flex-1">
@@ -16,7 +34,6 @@ export default function CreateTaskForm() {
             Title
           </label>
           <input
-            required
             name="title"
             type="text"
             placeholder="Add new task ..."
@@ -31,7 +48,6 @@ export default function CreateTaskForm() {
             Description
           </label>
           <input
-            required
             type="text"
             name="description"
             placeholder="Type a short description about..."
@@ -73,6 +89,7 @@ export default function CreateTaskForm() {
           </select>
         </div>
         <button
+          disabled={pending}
           type="submit"
           aria-label="Create task"
           className="cursor-pointer py-3 justify-center font-barlow bg-red-900/70 text-white rounded-sm px-3 hover:bg-red-800/50 transition-colors flex items-center gap-2 font-normal tracking-wide"

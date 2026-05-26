@@ -14,13 +14,15 @@ type Properties = {
   severity?: { errors: string[] };
 };
 
-type CreateTaskResponse = Promise<{
+type CreateTaskState = {
   success: boolean;
   message: string;
   newTask?: Task;
   errors?: Properties;
   errorCode?: string;
-}>;
+};
+
+type CreateTaskResponse = Promise<CreateTaskState>;
 
 export default async function createTaskAction(
   prevState: unknown,
@@ -56,8 +58,14 @@ export default async function createTaskAction(
       description,
     });
 
+    const taskObj = JSON.parse(JSON.stringify(newTask));
+
     revalidatePath("/");
-    return { success: true, newTask, message: "Task created with success!" };
+    return {
+      success: true,
+      newTask: taskObj,
+      message: "Task created with success!",
+    };
   } catch (error: unknown) {
     if (error instanceof AppError) {
       return {

@@ -14,11 +14,14 @@ export const createTaskSchema = z.object({
     .string()
     .max(300, { error: "The description cannot exceed 300 characters." })
     .optional(),
-  severity: z
-    .enum(["low", "medium", "high"], {
-      error: "Select a valid severity.",
-    })
-    .optional(),
+  severity: z.preprocess(
+    (val) => (val === "" ? undefined : val),
+    z
+      .enum(["low", "medium", "high"], {
+        error: "Select a valid severity.",
+      })
+      .optional(),
+  ),
   dueDate: z
     .string()
     .optional()
@@ -66,6 +69,10 @@ export const updateTaskSchema = z.object({
     })
     .optional(),
   isCompleted: z
+    .enum(["true", "false"])
+    .transform((value: string) => value == "true")
+    .optional(),
+  isExpired: z
     .enum(["true", "false"])
     .transform((value: string) => value == "true")
     .optional(),

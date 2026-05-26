@@ -5,6 +5,7 @@ export interface TaskDocument extends Document {
   title: string;
   dueDate?: Date;
   severity?: string;
+  isExpired: boolean;
   isCompleted: boolean;
   description?: string;
 
@@ -33,6 +34,11 @@ const taskSchema = new Schema<TaskDocument>(
       type: Boolean,
       default: false,
       required: true,
+    },
+    isExpired: {
+      type: Boolean,
+      default: false,
+      requried: true,
     },
     severity: {
       trim: true,
