@@ -5,6 +5,7 @@ export type Task = {
   title: string;
   dueDate?: string;
   severity?: string;
+  isExpired: boolean;
   isCompleted: boolean;
   description: string;
 
