@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Barlow, Space_Grotesk } from "next/font/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 const barlow = Barlow({
@@ -29,7 +30,10 @@ export default function RootLayout({
       lang="en"
       className={`antialiased font-sans ${barlow.variable} ${space.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        {children}
+        <SpeedInsights />
+      </body>
     </html>
   );
 }
