@@ -14,7 +14,7 @@ const navTabs = [
 
 export default function NavBar({ activeTab, setActiveTab }: NavBarProps) {
   return (
-    <nav className="font-barlow border-b border-neutral-800 sticky top-0 bg-neutral-950/95 backdrop-blur">
+    <nav className="font-barlow border-b border-neutral-800 bg-neutral-950/95 backdrop-blur">
       <div className="max-w-6xl mx-auto px-6 flex gap-8">
         {navTabs.map((tab) => {
           const Icon = tab.icon;
