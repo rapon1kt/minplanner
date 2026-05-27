@@ -38,7 +38,7 @@ const taskSchema = new Schema<TaskDocument>(
     isExpired: {
       type: Boolean,
       default: false,
-      requried: true,
+      required: true,
     },
     severity: {
       trim: true,
