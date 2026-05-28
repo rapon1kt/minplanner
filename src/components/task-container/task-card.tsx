@@ -24,10 +24,7 @@ const returnSeverityStyle = (severity: SeverityType) => {
 const capitalizeStr = (str: string): string =>
   str.charAt(0).toUpperCase() + str.slice(1);
 
-const renewTaskToToday = (dueDate: string): string | undefined => {
-  if (!dueDate) {
-    return undefined;
-  }
+const renewTaskToToday = (): string => {
   const today = new Date();
   today.setHours(23, 59, 59, 999);
   return today.toString();
@@ -41,11 +38,7 @@ export default function TaskCard({ task }: { task: Task }) {
           <form className="flex" action={updateTask}>
             <input type="hidden" name="taskId" value={task._id?.toString()} />
             <input type="hidden" name="isExpired" value="false" />
-            <input
-              type="hidden"
-              name="dueDate"
-              value={renewTaskToToday(task.dueDate!)}
-            />
+            <input type="hidden" name="dueDate" value={renewTaskToToday()} />
             <button
               type="submit"
               className="cursor-pointer shrink-0 transition-colors"
