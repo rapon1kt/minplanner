@@ -72,6 +72,10 @@ export const updateTaskSchema = z.object({
     .enum(["true", "false"])
     .transform((value: string) => value == "true")
     .optional(),
+  isExpired: z
+    .enum(["true", "false"])
+    .transform((value: string) => value == "true")
+    .optional(),
   dueDate: z
     .string()
     .optional()
