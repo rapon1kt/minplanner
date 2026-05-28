@@ -21,7 +21,15 @@ export default async function updateTaskAction(
   formData: FormData,
 ): Promise<UpdateTaskResponse> {
   const rawData = Object.fromEntries(
-    ["taskId", "title", "severity", "description", "dueDate", "isCompleted"]
+    [
+      "taskId",
+      "title",
+      "severity",
+      "isExpired",
+      "description",
+      "dueDate",
+      "isCompleted",
+    ]
       .map((field) => [field, formData.get(field)])
       .filter(([, value]) => value !== null),
   );
