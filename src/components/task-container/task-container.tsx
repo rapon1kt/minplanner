@@ -1,6 +1,7 @@
 import TaskCard from "./task-card";
 import { Task } from "@/core/domain/models";
 import CreateTaskForm from "./create-task-form";
+import { TriangleAlert } from "lucide-react";
 
 const dateFilter = (dueDateString: string | undefined): boolean => {
   const today = new Date();
@@ -12,13 +13,15 @@ const dateFilter = (dueDateString: string | undefined): boolean => {
 };
 
 const getDailyTasks = (tasks: Task[]): Task[] => {
-  return tasks.filter((task) => dateFilter(task.dueDate) == true);
+  return tasks.filter((task) => dateFilter(task.dueDate) && !task.isExpired);
 };
 
 export default function TaskContainer({ tasks }: { tasks: Task[] }) {
   const dailyTasks = getDailyTasks(tasks);
-
-  const otherTasks = tasks.filter((task) => dateFilter(task.dueDate) == false);
+  const otherTasks = tasks.filter(
+    (task) => !dateFilter(task.dueDate) && !task.isExpired,
+  );
+  const expiredTasks = tasks.filter((task) => task.isExpired);
 
   return (
     <div className="animate-fade-in p-8">
@@ -30,21 +33,36 @@ export default function TaskContainer({ tasks }: { tasks: Task[] }) {
           </p>
         ) : (
           <div className="space-y-4">
+            {expiredTasks.length != 0 && (
+              <>
+                <p className="text-lg flex gap-2 items-center font-space text-red-500/70">
+                  <TriangleAlert size={18} />
+                  Overdue
+                </p>
+                {expiredTasks.map((task) => (
+                  <TaskCard task={task} key={task._id?.toString()} />
+                ))}
+              </>
+            )}
             {dailyTasks.length != 0 && (
               <>
-                <p className="text-lg font-space text-neutral-400">
-                  Daily Tasks
-                </p>
+                <p className="text-lg font-space text-neutral-400">Daily</p>
                 {dailyTasks.map((task) => (
                   <TaskCard task={task} key={task._id?.toString()} />
                 ))}
-                <div className="border border-neutral-800" />
               </>
             )}
-            <p className="text-lg font-space text-neutral-400">
-              {dailyTasks.length != 0 ? "Other Tasks" : "Tasks"}
-            </p>
-            {otherTasks.length == 0 ? (
+            {dailyTasks.length == 0 && expiredTasks.length == 0 ? (
+              <p className="text-lg font-space text-neutral-400">Tasks</p>
+            ) : (
+              <p
+                hidden={otherTasks.length == 0}
+                className="text-lg font-space text-neutral-400"
+              >
+                Others
+              </p>
+            )}
+            {tasks.length == 0 && otherTasks.length == 0 ? (
               <p className="text-sm text-center font-barlow text-neutral-400">
                 No other tasks present yet! Try creating new ones...
               </p>

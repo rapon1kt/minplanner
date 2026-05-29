@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { AlertCircle, CheckCircle2 } from "lucide-react";
+import { AlertCircle, CheckCircle2, X } from "lucide-react";
 import type { CreateTaskFormState } from "./create-task-form-types";
 
 type FieldName = "title" | "description" | "dueDate" | "severity";
@@ -56,7 +56,7 @@ export default function CreateTaskFormAlert({
   return (
     <div
       role={isSuccess ? "status" : "alert"}
-      className={`relative overflow-hidden rounded-sm border px-3 py-2 font-barlow text-sm shadow-md transition-all duration-300 ${
+      className={`relative overflow-hidden animate-fade-in rounded-sm border px-3 py-2 mb-3 font-barlow text-sm shadow-md transition-all duration-300 ${
         isSuccess
           ? "border-green-900/80 bg-green-900/30 text-green-200"
           : "border-red-900/80 bg-red-900/30 text-red-200"
@@ -68,7 +68,7 @@ export default function CreateTaskFormAlert({
         ) : (
           <AlertCircle size={18} className="mt-0.5 shrink-0" />
         )}
-        <div className="space-y-1">
+        <div className="space-y-1 flex-1">
           <p className="font-sm">{result.message}</p>
           {fieldErrors.length > 0 && (
             <ul className="list-disc space-y-1 pl-4">
@@ -80,6 +80,11 @@ export default function CreateTaskFormAlert({
             </ul>
           )}
         </div>
+        <X
+          size={18}
+          className="cursor-pointer mt-0.5 shrink-0"
+          onClick={() => setIsVisible(false)}
+        />
       </div>
       <div
         key={prevResult === result ? "running" : "reset"}
