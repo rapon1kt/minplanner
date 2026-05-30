@@ -1,7 +1,7 @@
-import TaskCard from "./task-card";
 import { Task } from "@/core/domain/models";
-import CreateTaskForm from "./create-task-form";
+import TaskCard from "./task-card/task-card";
 import { TriangleAlert } from "lucide-react";
+import CreateTaskForm from "./create-task-form";
 
 const dateFilter = (dueDateString: string | undefined): boolean => {
   const today = new Date();
