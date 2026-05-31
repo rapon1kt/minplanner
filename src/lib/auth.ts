@@ -7,6 +7,8 @@ import type { NextAuthConfig } from "next-auth";
 import type { Provider } from "next-auth/providers";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 
+import type { TokenSet } from "@auth/core/types";
+
 type AuthProviderId = "google" | "github";
 
 type AuthProviderMetadata = {
@@ -135,7 +137,7 @@ function createProviders() {
         allowDangerousEmailAccountLinking: true,
         userinfo: {
           url: "https://api.github.com/user",
-          async request({ tokens }) {
+          async request({ tokens }: { tokens: TokenSet }) {
             if (!tokens.access_token) {
               throw new Error("Missing GitHub access token.");
             }
