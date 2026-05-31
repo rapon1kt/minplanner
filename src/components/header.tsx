@@ -9,7 +9,7 @@ interface HeaderProps {
 export default function Header({ session }: HeaderProps) {
   const handleSignOut = async () => {
     "use server";
-    await signOut();
+    await signOut({ redirectTo: "/sign-in" });
   };
 
   return (
