@@ -1,7 +1,7 @@
+import TaskTopBar from "./task-top-bar";
 import { Task } from "@/core/domain/models";
 import TaskCard from "./task-card/task-card";
 import { TriangleAlert } from "lucide-react";
-import CreateTaskForm from "./create-task-form";
 
 const dateFilter = (dueDateString: string | undefined): boolean => {
   const today = new Date();
@@ -25,7 +25,7 @@ export default function TaskContainer({ tasks }: { tasks: Task[] }) {
 
   return (
     <div className="animate-fade-in p-8">
-      <CreateTaskForm />
+      <TaskTopBar />
       <div className="space-y-2">
         {tasks.length === 0 ? (
           <p className="text-neutral-500 text-center">
