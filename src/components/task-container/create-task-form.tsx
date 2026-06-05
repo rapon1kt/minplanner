@@ -95,7 +95,7 @@ export default function CreateTaskForm({
           disabled={pending}
           type="submit"
           aria-label="Create task"
-          className="cursor-pointer py-3 justify-center font-barlow bg-red-900/70 text-white rounded-sm px-3 hover:bg-red-800/50 transition-colors flex items-center gap-2 font-normal tracking-wide"
+          className="cursor-pointer py-3 mt-2 md:mt-0 justify-center font-barlow bg-red-900/70 text-white rounded-sm px-3 hover:bg-red-800/50 transition-colors flex items-center gap-2 font-normal tracking-wide"
         >
           <Plus size={18} />
         </button>
