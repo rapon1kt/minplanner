@@ -11,20 +11,23 @@ const initialState: CreateTaskFormState = {
   message: "",
 };
 
-export default function CreateTaskForm() {
+export default function CreateTaskForm({
+  isFormExpanded,
+}: {
+  isFormExpanded: boolean;
+}) {
   const [state, formAction, pending] = useActionState(
     createTaskAction,
     initialState,
   );
 
   return (
-    <div className="mb-8">
-      <div className="mb-3">
-        <CreateTaskFormAlert result={state} />
-      </div>
+    <div className="space-y-6">
+      <CreateTaskFormAlert result={state} />
       <form
+        hidden={!isFormExpanded}
         action={formAction}
-        className="flex flex-col md:flex-row md:items-end gap-2"
+        className="flex flex-col mb-6 animate-fade-in md:flex-row md:items-end gap-2"
       >
         <div className="flex flex-col gap-1 flex-1">
           <label
