@@ -7,6 +7,7 @@ import z from "zod";
 
 type Properties = {
   taskId?: { errors: string[] };
+  tags?: { errors: string[] };
 };
 
 type UpdateTaskResponse = {
@@ -16,11 +17,24 @@ type UpdateTaskResponse = {
   errorCode?: string;
 };
 
+function getFormDataValues(formData: FormData, field: string) {
+  const getAll = (formData as { getAll?: FormData["getAll"] }).getAll;
+
+  return (
+    getAll
+      ?.call(formData, field)
+      .map((value) => value.toString())
+      .filter(Boolean) ?? []
+  );
+}
+
 export default async function updateTaskAction(
   prevState: unknown,
   formData: FormData,
 ): Promise<UpdateTaskResponse> {
-  const rawData = Object.fromEntries(
+  const tags = getFormDataValues(formData, "tags");
+  const rawData = {
+    ...Object.fromEntries(
     [
       "taskId",
       "title",
@@ -32,7 +46,9 @@ export default async function updateTaskAction(
     ]
       .map((field) => [field, formData.get(field)])
       .filter(([, value]) => value !== null),
-  );
+    ),
+    ...(tags.length > 0 ? { tags } : {}),
+  };
 
   const validatedFields = updateTaskSchema.safeParse(rawData);
 
