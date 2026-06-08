@@ -36,4 +36,6 @@ const tagSchema = new Schema<Tag>(
   { timestamps: true },
 );
 
+tagSchema.index({ userId: 1, title: 1 }, { unique: true });
+
 export const TagModel = models.Tag || model<Tag>("Tag", tagSchema);
