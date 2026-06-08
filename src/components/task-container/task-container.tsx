@@ -1,7 +1,14 @@
+"use client";
 import TaskTopBar from "./task-top-bar";
-import { Task } from "@/core/domain/models";
+import { Tag, Task } from "@/core/domain/models";
 import TaskCard from "./task-card/task-card";
 import { TriangleAlert } from "lucide-react";
+import { useState } from "react";
+import { getValueId } from "@/utils";
+import {
+  ALL_TAGS_FILTER,
+  UNTAGGED_TAGS_FILTER,
+} from "./task-filter-constants";
 
 const dateFilter = (dueDateString: string | undefined): boolean => {
   const today = new Date();
@@ -16,23 +23,59 @@ const getDailyTasks = (tasks: Task[]): Task[] => {
   return tasks.filter((task) => dateFilter(task.dueDate) && !task.isExpired);
 };
 
-export default function TaskContainer({ tasks }: { tasks: Task[] }) {
-  const dailyTasks = getDailyTasks(tasks);
-  const otherTasks = tasks.filter(
+function filterTasksByTag(tasks: Task[], selectedTagId: string) {
+  if (selectedTagId === ALL_TAGS_FILTER) return tasks;
+
+  return tasks.filter((task) => {
+    const taskTagIds = task.tags?.map(getValueId) ?? [];
+
+    if (selectedTagId === UNTAGGED_TAGS_FILTER) {
+      return taskTagIds.length === 0;
+    }
+
+    return taskTagIds.includes(selectedTagId);
+  });
+}
+
+export default function TaskContainer({
+  tags,
+  tasks,
+}: {
+  tags: Tag[];
+  tasks: Task[];
+}) {
+  const [selectedTagId, setSelectedTagId] = useState(ALL_TAGS_FILTER);
+  const filteredTasks = filterTasksByTag(tasks, selectedTagId);
+  const dailyTasks = getDailyTasks(filteredTasks);
+  const otherTasks = filteredTasks.filter(
     (task) => !dateFilter(task.dueDate) && !task.isExpired,
   );
-  const expiredTasks = tasks.filter((task) => task.isExpired);
+  const expiredTasks = filteredTasks.filter((task) => task.isExpired);
+  const isFiltering = selectedTagId !== ALL_TAGS_FILTER;
 
   return (
     <div className="animate-fade-in p-8">
-      <TaskTopBar />
+      <TaskTopBar
+        onSelectTagIdAction={setSelectedTagId}
+        selectedTagId={selectedTagId}
+        tags={tags}
+      />
       <div className="space-y-2">
         {tasks.length === 0 ? (
           <p className="text-neutral-500 text-center">
             No tasks yet. Create a new one!
           </p>
+        ) : filteredTasks.length === 0 ? (
+          <p className="text-neutral-500 text-center">
+            No tasks match this tag filter.
+          </p>
         ) : (
           <div className="space-y-4">
+            {isFiltering && (
+              <p className="font-barlow text-sm text-neutral-500">
+                Showing {filteredTasks.length} of {tasks.length} tasks.
+              </p>
+            )}
             {expiredTasks.length != 0 && (
               <>
                 <p className="text-lg flex gap-2 items-center font-space text-red-500/70">
@@ -40,7 +83,11 @@ export default function TaskContainer({ tasks }: { tasks: Task[] }) {
                   Overdue
                 </p>
                 {expiredTasks.map((task) => (
-                  <TaskCard task={task} key={task._id?.toString()} />
+                  <TaskCard
+                    tags={tags}
+                    task={task}
+                    key={task._id?.toString()}
+                  />
                 ))}
               </>
             )}
@@ -48,7 +95,11 @@ export default function TaskContainer({ tasks }: { tasks: Task[] }) {
               <>
                 <p className="text-lg font-space text-neutral-400">Daily</p>
                 {dailyTasks.map((task) => (
-                  <TaskCard task={task} key={task._id?.toString()} />
+                  <TaskCard
+                    tags={tags}
+                    task={task}
+                    key={task._id?.toString()}
+                  />
                 ))}
               </>
             )}
@@ -68,7 +119,7 @@ export default function TaskContainer({ tasks }: { tasks: Task[] }) {
               </p>
             ) : (
               otherTasks.map((task) => (
-                <TaskCard task={task} key={task._id?.toString()} />
+                <TaskCard tags={tags} task={task} key={task._id?.toString()} />
               ))
             )}
           </div>
