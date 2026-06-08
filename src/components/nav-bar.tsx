@@ -1,4 +1,4 @@
-import { Calendar, Clock, ListTodo } from "lucide-react";
+import { Calendar, Clock, ListTodo, Tags } from "lucide-react";
 import { Dispatch, SetStateAction } from "react";
 
 interface NavBarProps {
@@ -8,6 +8,7 @@ interface NavBarProps {
 
 const navTabs = [
   { id: "tasks", label: "Tasks", icon: ListTodo },
+  { id: "tags", label: "Tags", icon: Tags },
   { id: "routines", label: "Routines", icon: Clock },
   { id: "calendar", label: "Calendar", icon: Calendar },
 ];
