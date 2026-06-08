@@ -7,7 +7,7 @@ const taskIdSchema = z.string().refine((val) => Types.ObjectId.isValid(val), {
 
 const tagIdsSchema = z
   .array(taskIdSchema)
-  .max(12, { error: "A task cannot have more than 12 tags." })
+  .max(5, { error: "A task cannot have more than 5 tags." })
   .optional();
 
 export const createTaskSchema = z.object({
