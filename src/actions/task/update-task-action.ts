@@ -7,6 +7,12 @@ import z from "zod";
 
 type Properties = {
   taskId?: { errors: string[] };
+  title?: { errors: string[] };
+  severity?: { errors: string[] };
+  isExpired?: { errors: string[] };
+  description?: { errors: string[] };
+  dueDate?: { errors: string[] };
+  isCompleted?: { errors: string[] };
   tags?: { errors: string[] };
 };
 
@@ -33,21 +39,22 @@ export default async function updateTaskAction(
   formData: FormData,
 ): Promise<UpdateTaskResponse> {
   const tags = getFormDataValues(formData, "tags");
+  const shouldUpdateTags = formData.get("shouldUpdateTags") === "true";
   const rawData = {
     ...Object.fromEntries(
-    [
-      "taskId",
-      "title",
-      "severity",
-      "isExpired",
-      "description",
-      "dueDate",
-      "isCompleted",
-    ]
-      .map((field) => [field, formData.get(field)])
-      .filter(([, value]) => value !== null),
+      [
+        "taskId",
+        "title",
+        "severity",
+        "isExpired",
+        "description",
+        "dueDate",
+        "isCompleted",
+      ]
+        .map((field) => [field, formData.get(field)])
+        .filter(([, value]) => value !== null),
     ),
-    ...(tags.length > 0 ? { tags } : {}),
+    ...(shouldUpdateTags || tags.length > 0 ? { tags } : {}),
   };
 
   const validatedFields = updateTaskSchema.safeParse(rawData);

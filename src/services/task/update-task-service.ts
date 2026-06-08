@@ -2,6 +2,7 @@ import { NotFound } from "@/errors";
 import { AppError } from "@/errors/app-error";
 import { TaskModel } from "@/infra/db/mongoose/models";
 import { connectMongoose } from "@/infra/db/mongoose/mongoose";
+import { ensureTagsBelongToUser } from "@/services/tag/tag-service-utils";
 
 interface UpdateTaskDTO {
   title?: string;
@@ -9,6 +10,7 @@ interface UpdateTaskDTO {
   description?: string;
   isCompleted?: boolean;
   severity?: string;
+  tags?: string[];
 }
 
 export default async function updateTaskService(
@@ -19,9 +21,16 @@ export default async function updateTaskService(
   await connectMongoose();
 
   try {
+    const tags =
+      "tags" in updateTaskDTO
+        ? await ensureTagsBelongToUser(updateTaskDTO.tags, userId)
+        : undefined;
+    const updatePayload =
+      tags === undefined ? updateTaskDTO : { ...updateTaskDTO, tags };
+
     const updatedTask = await TaskModel.findOneAndUpdate(
       { _id: taskId, userId },
-      { $set: updateTaskDTO },
+      { $set: updatePayload },
       { returnDocument: "after" },
     ).lean();
     if (!updatedTask) {
