@@ -3,13 +3,21 @@ import { useEffect, useState } from "react";
 import { AlertCircle, CheckCircle2, X } from "lucide-react";
 import type { CreateTaskFormState } from "./create-task-form-types";
 
-type FieldName = "title" | "description" | "dueDate" | "severity";
+type FieldName =
+  | "taskId"
+  | "title"
+  | "description"
+  | "dueDate"
+  | "severity"
+  | "tags";
 
 const fieldLabels: Record<FieldName, string> = {
+  taskId: "Task",
   title: "Title",
   description: "Description",
   dueDate: "Due date",
   severity: "Priority",
+  tags: "Tags",
 };
 
 const getFieldErrors = (result: CreateTaskFormState) => {
@@ -62,7 +70,7 @@ export default function CreateTaskFormAlert({
           : "border-red-900/80 bg-red-900/30 text-red-200"
       }`}
     >
-      <div className="flex flex-col sm:flex-row items-center gap-3 mb-1">
+      <div className="flex items-center gap-3 mb-1">
         {isSuccess ? (
           <CheckCircle2 size={18} className="mt-0.5 shrink-0" />
         ) : (

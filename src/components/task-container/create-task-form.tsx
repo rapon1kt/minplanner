@@ -4,21 +4,20 @@ import { useActionState } from "react";
 import CreateTaskFormAlert from "./create-task-form-alert";
 import createTaskAction from "@/actions/task/create-task-action";
 
-import type { CreateTaskFormState } from "./create-task-form-types";
-
-const initialState: CreateTaskFormState = {
-  success: false,
-  message: "",
-};
+import { initialTaskFormState } from "./create-task-form-types";
+import type { Tag } from "@/core/domain/models";
+import { getRecordId } from "@/utils";
 
 export default function CreateTaskForm({
   isFormExpanded,
+  tags,
 }: {
   isFormExpanded: boolean;
+  tags: Tag[];
 }) {
   const [state, formAction, pending] = useActionState(
     createTaskAction,
-    initialState,
+    initialTaskFormState,
   );
 
   return (
@@ -91,6 +90,42 @@ export default function CreateTaskForm({
             <option value="high">High</option>
           </select>
         </div>
+        <div className="flex flex-col gap-1 flex-1 md:max-w-56">
+          <label className="text-neutral-400 font-space text-xs">Tags</label>
+          <div className="flex min-h-10 flex-wrap gap-2 rounded-sm border border-neutral-800 bg-neutral-900 px-2 py-2">
+            {tags.length === 0 ? (
+              <span className="font-barlow text-sm text-neutral-600">
+                No tags yet
+              </span>
+            ) : (
+              tags.map((tag) => {
+                const tagId = getRecordId(tag);
+
+                return (
+                  <label
+                    key={tagId}
+                    className="flex cursor-pointer items-center gap-1 rounded-full border border-neutral-800 px-2 py-1 font-barlow text-xs text-neutral-400 transition-colors hover:bg-neutral-800"
+                  >
+                    <input
+                      type="checkbox"
+                      name="tags"
+                      value={tagId}
+                      className="sr-only peer"
+                    />
+                    <span
+                      className="size-2 rounded-full"
+                      style={{ backgroundColor: tag.color }}
+                    />
+                    <span className="peer-checked:text-neutral-100">
+                      {tag.title}
+                    </span>
+                  </label>
+                );
+              })
+            )}
+          </div>
+        </div>
+
         <button
           disabled={pending}
           type="submit"
