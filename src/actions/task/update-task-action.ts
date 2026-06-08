@@ -1,3 +1,4 @@
+"use server";
 import { AppError } from "@/errors/app-error";
 import { getVerifiedUser } from "@/lib/verify-auth";
 import { updateTaskSchema } from "@/schemas/taskSchema";
