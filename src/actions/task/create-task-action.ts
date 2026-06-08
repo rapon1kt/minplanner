@@ -12,6 +12,7 @@ type Properties = {
   description?: { errors: string[] };
   dueDate?: { errors: string[] };
   severity?: { errors: string[] };
+  tags?: { errors: string[] };
 };
 
 type CreateTaskState = {
@@ -24,6 +25,17 @@ type CreateTaskState = {
 
 type CreateTaskResponse = Promise<CreateTaskState>;
 
+function getFormDataValues(formData: FormData, field: string) {
+  const getAll = (formData as { getAll?: FormData["getAll"] }).getAll;
+
+  return (
+    getAll
+      ?.call(formData, field)
+      .map((value) => value.toString())
+      .filter(Boolean) ?? []
+  );
+}
+
 export default async function createTaskAction(
   prevState: unknown,
   formData: FormData,
@@ -35,6 +47,7 @@ export default async function createTaskAction(
     dueDate: formData.get("dueDate"),
     severity: formData.get("severity"),
     description: formData.get("description"),
+    tags: getFormDataValues(formData, "tags"),
   };
 
   const validatedFields = createTaskSchema.safeParse(rawData);
@@ -48,7 +61,8 @@ export default async function createTaskAction(
   }
 
   try {
-    const { title, severity, description, dueDate } = validatedFields.data;
+    const { title, severity, description, dueDate, tags } =
+      validatedFields.data;
 
     const newTask = await createTaskService({
       title,
@@ -56,6 +70,7 @@ export default async function createTaskAction(
       dueDate,
       severity,
       description,
+      ...(tags && tags.length > 0 ? { tags } : {}),
     });
 
     const taskObj = JSON.parse(JSON.stringify(newTask));
