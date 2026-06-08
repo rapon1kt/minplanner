@@ -2,7 +2,7 @@
 import type { Task } from "@/core/domain/models";
 import { renewTaskToToday } from "./task-card-utils";
 import { updateTask } from "@/actions/task/form-actions";
-import { RefreshCcw, Square, SquareCheck, Trash2 } from "lucide-react";
+import { Pencil, RefreshCcw, Square, SquareCheck, Trash2 } from "lucide-react";
 
 type TaskActionProps = {
   task: Task;
@@ -10,6 +10,10 @@ type TaskActionProps = {
 
 type DeleteActionProps = {
   onDeleteIntentAction: () => void;
+};
+
+type EditActionProps = {
+  onEditIntentAction: () => void;
 };
 
 export function TaskDesktopStatusAction({ task }: TaskActionProps) {
@@ -78,10 +82,24 @@ export function TaskDesktopDeleteButton({
   );
 }
 
+export function TaskDesktopEditButton({ onEditIntentAction }: EditActionProps) {
+  return (
+    <button
+      type="button"
+      aria-label="Edit task"
+      onClick={onEditIntentAction}
+      className="hidden sm:flex cursor-pointer shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-neutral-600 hover:text-neutral-300"
+    >
+      <Pencil size={18} />
+    </button>
+  );
+}
+
 export function TaskMobileActions({
   onDeleteIntentAction,
+  onEditIntentAction,
   task,
-}: TaskActionProps & DeleteActionProps) {
+}: TaskActionProps & DeleteActionProps & EditActionProps) {
   const taskId = task._id?.toString();
 
   return (
@@ -117,6 +135,16 @@ export function TaskMobileActions({
           {task.isCompleted ? "Completed" : "Complete"}
         </button>
       </form>
+      <div className="flex">
+        <button
+          type="button"
+          aria-label="Edit task"
+          onClick={onEditIntentAction}
+          className="text-neutral-400 bg-neutral-900/60 border border-neutral-800 p-2 px-4 justify-center text-md flex w-full rounded-sm items-center gap-2 font-barlow"
+        >
+          <Pencil size={14} />
+        </button>
+      </div>
       <div className="flex">
         <button
           type="button"

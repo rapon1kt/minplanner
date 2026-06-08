@@ -1,26 +1,18 @@
 "use client";
 import { useEffect, useState } from "react";
 import { AlertCircle, CheckCircle2, X } from "lucide-react";
-import type { CreateTaskFormState } from "./create-task-form-types";
+import type { TagFormState } from "./tag-form-types";
 
-type FieldName =
-  | "taskId"
-  | "title"
-  | "description"
-  | "dueDate"
-  | "severity"
-  | "tags";
+type FieldName = "tagId" | "title" | "color" | "description";
 
 const fieldLabels: Record<FieldName, string> = {
-  taskId: "Task",
+  tagId: "Tag",
   title: "Title",
+  color: "Color",
   description: "Description",
-  dueDate: "Due date",
-  severity: "Priority",
-  tags: "Tags",
 };
 
-const getFieldErrors = (result: CreateTaskFormState) => {
+const getFieldErrors = (result: TagFormState) => {
   if (!result.errors) return [];
 
   return Object.entries(result.errors).flatMap(([field, value]) =>
@@ -31,30 +23,23 @@ const getFieldErrors = (result: CreateTaskFormState) => {
   );
 };
 
-export default function CreateTaskFormAlert({
-  result,
-}: {
-  result: CreateTaskFormState;
-}) {
-  const [isVisible, setIsVisible] = useState(false);
-  const [prevResult, setPrevResult] = useState(result);
-
-  const duration = 8000;
-
-  if (result !== prevResult) {
-    setPrevResult(result);
-    setIsVisible(!!result.message);
-  }
+export default function TagFormAlert({ result }: { result: TagFormState }) {
+  const [dismissedMessageKey, setDismissedMessageKey] = useState<string | null>(
+    null,
+  );
+  const messageKey = `${result.success}-${result.errorCode ?? ""}-${result.message}`;
+  const isVisible =
+    Boolean(result.message) && dismissedMessageKey !== messageKey;
 
   useEffect(() => {
-    if (isVisible && result.message) {
-      const timer = setTimeout(() => {
-        setIsVisible(false);
-      }, duration);
+    if (!isVisible || !result.message) return;
 
-      return () => clearTimeout(timer);
-    }
-  }, [isVisible, result.message]);
+    const timer = setTimeout(() => {
+      setDismissedMessageKey(messageKey);
+    }, 8000);
+
+    return () => clearTimeout(timer);
+  }, [isVisible, messageKey, result.message]);
 
   if (!result.message || !isVisible) return null;
 
@@ -64,20 +49,20 @@ export default function CreateTaskFormAlert({
   return (
     <div
       role={isSuccess ? "status" : "alert"}
-      className={`relative overflow-hidden animate-fade-in rounded-sm border px-3 py-2 mb-3 font-barlow text-sm shadow-md transition-all duration-300 ${
+      className={`relative overflow-hidden animate-fade-in rounded-sm border px-3 py-2 font-barlow text-sm shadow-md ${
         isSuccess
           ? "border-green-900/80 bg-green-900/30 text-green-200"
           : "border-red-900/80 bg-red-900/30 text-red-200"
       }`}
     >
-      <div className="flex items-center gap-3 mb-1">
+      <div className="flex items-start gap-3">
         {isSuccess ? (
           <CheckCircle2 size={18} className="mt-0.5 shrink-0" />
         ) : (
           <AlertCircle size={18} className="mt-0.5 shrink-0" />
         )}
         <div className="space-y-1 flex-1">
-          <p className="font-sm">{result.message}</p>
+          <p>{result.message}</p>
           {fieldErrors.length > 0 && (
             <ul className="list-disc space-y-1 pl-4">
               {fieldErrors.map(({ field, error }) => (
@@ -88,14 +73,16 @@ export default function CreateTaskFormAlert({
             </ul>
           )}
         </div>
-        <X
-          size={18}
-          className="cursor-pointer mt-0.5 shrink-0"
-          onClick={() => setIsVisible(false)}
-        />
+        <button
+          type="button"
+          aria-label="Dismiss tag message"
+          onClick={() => setDismissedMessageKey(messageKey)}
+          className="mt-0.5 cursor-pointer"
+        >
+          <X size={18} />
+        </button>
       </div>
       <div
-        key={prevResult === result ? "running" : "reset"}
         className={`absolute bottom-0 left-0 h-0.75 animate-progress-timer ${
           isSuccess ? "bg-green-700/60" : "bg-red-700/60"
         }`}

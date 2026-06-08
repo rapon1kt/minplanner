@@ -5,6 +5,11 @@ const taskIdSchema = z.string().refine((val) => Types.ObjectId.isValid(val), {
   error: "Invalid ObjectId.",
 });
 
+const tagIdsSchema = z
+  .array(taskIdSchema)
+  .max(5, { error: "A task cannot have more than 5 tags." })
+  .optional();
+
 export const createTaskSchema = z.object({
   title: z
     .string()
@@ -43,6 +48,7 @@ export const createTaskSchema = z.object({
       },
       { error: "The due date cannot be earlier than the current day." },
     ),
+  tags: tagIdsSchema,
 });
 
 export const deleteTaskSchema = z.object({
@@ -63,11 +69,14 @@ export const updateTaskSchema = z.object({
     .max(300, { error: "The description cannot exceed 300 characters." })
     .optional()
     .transform((val) => (val === "" ? undefined : val)),
-  severity: z
-    .enum(["low", "medium", "high"], {
-      error: "Select a valid severity.",
-    })
-    .optional(),
+  severity: z.preprocess(
+    (val) => (val === "" ? undefined : val),
+    z
+      .enum(["low", "medium", "high"], {
+        error: "Select a valid severity.",
+      })
+      .optional(),
+  ),
   isCompleted: z
     .enum(["true", "false"])
     .transform((value: string) => value == "true")
@@ -80,7 +89,14 @@ export const updateTaskSchema = z.object({
     .string()
     .optional()
     .transform((val) => (val === "" ? undefined : val))
-    .transform((val) => (val ? new Date(val) : undefined))
+    .transform((val) => {
+      if (val) {
+        const date = new Date(val);
+        date.setUTCHours(23, 59, 59, 999);
+        return date;
+      }
+      return undefined;
+    })
     .refine(
       (date) => {
         if (!date) return true;
@@ -91,4 +107,5 @@ export const updateTaskSchema = z.object({
       },
       { error: "The due date cannot be earlier than the current day." },
     ),
+  tags: tagIdsSchema,
 });

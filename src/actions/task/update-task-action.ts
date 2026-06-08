@@ -1,3 +1,4 @@
+"use server";
 import { AppError } from "@/errors/app-error";
 import { getVerifiedUser } from "@/lib/verify-auth";
 import { updateTaskSchema } from "@/schemas/taskSchema";
@@ -7,6 +8,13 @@ import z from "zod";
 
 type Properties = {
   taskId?: { errors: string[] };
+  title?: { errors: string[] };
+  severity?: { errors: string[] };
+  isExpired?: { errors: string[] };
+  description?: { errors: string[] };
+  dueDate?: { errors: string[] };
+  isCompleted?: { errors: string[] };
+  tags?: { errors: string[] };
 };
 
 type UpdateTaskResponse = {
@@ -16,23 +24,39 @@ type UpdateTaskResponse = {
   errorCode?: string;
 };
 
+function getFormDataValues(formData: FormData, field: string) {
+  const getAll = (formData as { getAll?: FormData["getAll"] }).getAll;
+
+  return (
+    getAll
+      ?.call(formData, field)
+      .map((value) => value.toString())
+      .filter(Boolean) ?? []
+  );
+}
+
 export default async function updateTaskAction(
   prevState: unknown,
   formData: FormData,
 ): Promise<UpdateTaskResponse> {
-  const rawData = Object.fromEntries(
-    [
-      "taskId",
-      "title",
-      "severity",
-      "isExpired",
-      "description",
-      "dueDate",
-      "isCompleted",
-    ]
-      .map((field) => [field, formData.get(field)])
-      .filter(([, value]) => value !== null),
-  );
+  const tags = getFormDataValues(formData, "tags");
+  const shouldUpdateTags = formData.get("shouldUpdateTags") === "true";
+  const rawData = {
+    ...Object.fromEntries(
+      [
+        "taskId",
+        "title",
+        "severity",
+        "isExpired",
+        "description",
+        "dueDate",
+        "isCompleted",
+      ]
+        .map((field) => [field, formData.get(field)])
+        .filter(([, value]) => value !== null),
+    ),
+    ...(shouldUpdateTags || tags.length > 0 ? { tags } : {}),
+  };
 
   const validatedFields = updateTaskSchema.safeParse(rawData);
 

@@ -11,12 +11,15 @@ const makeValidUpdateTaskData = () => ({
 
 describe("UpdateTaskSchema", () => {
   it("Should parse valid update task data.", async ({ expect }) => {
+    const expectedDueDate = new Date(2030, 2, 26);
+    expectedDueDate.setUTCHours(23, 59, 59, 999);
+
     const result = updateTaskSchema.safeParse(makeValidUpdateTaskData());
     expect(result.success).toBe(true);
     expect(result.data).toEqual({
       severity: "low",
       title: "valid_title",
-      dueDate: new Date(2030, 2, 26),
+      dueDate: expectedDueDate,
       description: "valid_description",
       taskId: "507f1f77bcf86cd799439011",
     });

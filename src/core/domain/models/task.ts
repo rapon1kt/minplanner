@@ -9,8 +9,8 @@ export type Task = {
   isCompleted: boolean;
   description: string;
 
-  tags?: Types.ObjectId[];
-  userId: Types.ObjectId;
+  tags?: Array<Types.ObjectId | string>;
+  userId: Types.ObjectId | string;
 
   createdAt: Date;
   updatedAt: Date;
