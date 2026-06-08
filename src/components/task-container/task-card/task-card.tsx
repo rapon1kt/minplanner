@@ -1,16 +1,26 @@
 "use client";
+import { useState } from "react";
 import {
   TaskDesktopDeleteButton,
+  TaskDesktopEditButton,
   TaskDesktopStatusAction,
   TaskMobileActions,
 } from "./task-card-actions";
-import type { Task } from "@/core/domain/models";
+import type { Tag, Task } from "@/core/domain/models";
 import TaskCardContent from "./task-card-content";
 import { deleteTask } from "@/actions/task/form-actions";
 import useDeleteTaskConfirmation from "../use-delete-task-confirmation";
 import DeleteTaskConfirmationModal from "../delete-task-confirmation-modal";
+import EditTaskModal from "../edit-task-modal";
 
-export default function TaskCard({ task }: { task: Task }) {
+export default function TaskCard({
+  tags,
+  task,
+}: {
+  tags: Tag[];
+  task: Task;
+}) {
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const {
     cancelButtonRef,
     deleteFormId,
@@ -36,12 +46,24 @@ export default function TaskCard({ task }: { task: Task }) {
       </form>
 
       <TaskDesktopStatusAction task={task} />
-      <TaskCardContent task={task} />
+      <TaskCardContent tags={tags} task={task} />
+      <TaskDesktopEditButton
+        onEditIntentAction={() => setIsEditModalOpen(true)}
+      />
       <TaskDesktopDeleteButton onDeleteIntentAction={handleDeleteIntent} />
       <TaskMobileActions
         task={task}
+        onEditIntentAction={() => setIsEditModalOpen(true)}
         onDeleteIntentAction={handleDeleteIntent}
       />
+
+      {isEditModalOpen && (
+        <EditTaskModal
+          tags={tags}
+          task={task}
+          onCloseAction={() => setIsEditModalOpen(false)}
+        />
+      )}
 
       {isDeleteModalOpen && (
         <DeleteTaskConfirmationModal
