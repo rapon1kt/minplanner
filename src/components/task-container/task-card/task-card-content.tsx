@@ -43,34 +43,37 @@ export default function TaskCardContent({
           {task.description}
         </p>
       </div>
-      {taskTags.length > 0 && (
-        <div className="flex flex-wrap gap-1.5">
-          {taskTags.map((tag) => (
-            <span
-              key={getRecordId(tag)}
-              className="inline-flex items-center gap-1 rounded-full border border-neutral-800 bg-neutral-950/50 px-2 py-0.5 font-barlow text-xs text-neutral-400"
-            >
+      <div className="flex flex-col sm:flex-row items-start sm:items-end gap-2">
+        {task.dueDate ? (
+          <p
+            className={`font-barlow flex ${task.isExpired && "text-red-500/60"} items-center gap-2 text-xs font-extralight text-neutral-400 mt-1`}
+          >
+            <AlarmClock size={18} />
+            {dueDateLabel}
+          </p>
+        ) : (
+          <p className="font-barlow font-extralight items-center flex gap-2 text-xs text-neutral-400 mt-1">
+            For eternity <Skull className="text-red-900" size={14} />
+          </p>
+        )}
+        <span className="hidden sm:block text-neutral-400">•</span>
+        {taskTags.length > 0 && (
+          <div className="sm:flex grid grid-cols-2 gap-1.5">
+            {taskTags.map((tag) => (
               <span
-                className="size-2 rounded-full"
-                style={{ backgroundColor: tag.color }}
-              />
-              {tag.title}
-            </span>
-          ))}
-        </div>
-      )}
-      {task.dueDate ? (
-        <p
-          className={`font-barlow flex ${task.isExpired && "text-red-500/60"} items-center gap-2 text-xs font-extralight text-neutral-400 mt-1`}
-        >
-          <AlarmClock size={18} />
-          {dueDateLabel}
-        </p>
-      ) : (
-        <p className="font-barlow font-extralight items-center flex gap-2 text-xs text-neutral-400 mt-1">
-          For eternity <Skull className="text-red-900" size={14} />
-        </p>
-      )}
+                key={getRecordId(tag)}
+                className="inline-flex items-center rounded-sm border border-neutral-800 gap-1 px-2 font-barlow text-xs text-neutral-400"
+              >
+                <span
+                  className="size-2 rounded-full"
+                  style={{ backgroundColor: tag.color }}
+                />
+                {tag.title}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
