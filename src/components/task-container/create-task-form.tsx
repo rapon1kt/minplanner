@@ -92,7 +92,7 @@ export default function CreateTaskForm({
         </div>
         <div className="flex flex-col gap-1 flex-1 md:max-w-56">
           <label className="text-neutral-400 font-space text-xs">Tags</label>
-          <div className="flex min-h-10 flex-wrap gap-2 rounded-sm border border-neutral-800 bg-neutral-900 px-2 py-2">
+          <div className="flex h-10 flex-wrap overflow-auto gap-2 rounded-sm border border-neutral-800 bg-neutral-900 px-2 py-2">
             {tags.length === 0 ? (
               <span className="font-barlow text-sm text-neutral-600">
                 No tags yet
