@@ -22,7 +22,7 @@ export default function TaskCardContent({
   const taskTags = tags.filter((tag) => taskTagIds.has(getRecordId(tag)));
 
   return (
-    <div className="min-w-0 flex-1 space-y-2">
+    <div className="min-w-0 flex-1 space-y-0.5">
       <div>
         <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
           <p
@@ -52,11 +52,15 @@ export default function TaskCardContent({
             {dueDateLabel}
           </p>
         ) : (
-          <p className="font-barlow font-extralight items-center flex gap-2 text-xs text-neutral-400 mt-1">
+          <p
+            className={`font-barlow font-extralight items-center flex gap-2 text-xs text-neutral-400 ${task.description.length == 0 ? "mt-0" : "mt-1"}`}
+          >
             For eternity <Skull className="text-red-900" size={14} />
           </p>
         )}
-        <span className="hidden sm:block text-neutral-400">•</span>
+        {task.tags?.length != 0 && (
+          <span className="hidden sm:block text-neutral-400">•</span>
+        )}
         {taskTags.length > 0 && (
           <div className="sm:flex grid grid-cols-2 gap-1.5">
             {taskTags.map((tag) => (
