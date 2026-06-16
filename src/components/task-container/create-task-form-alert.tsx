@@ -39,7 +39,7 @@ export default function CreateTaskFormAlert({
   const [isVisible, setIsVisible] = useState(false);
   const [prevResult, setPrevResult] = useState(result);
 
-  const duration = 8000;
+  const duration = 3000;
 
   if (result !== prevResult) {
     setPrevResult(result);

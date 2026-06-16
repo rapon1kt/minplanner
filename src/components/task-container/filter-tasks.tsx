@@ -2,10 +2,7 @@
 import type { Dispatch, SetStateAction } from "react";
 import type { Tag } from "@/core/domain/models";
 import { getRecordId } from "@/utils";
-import {
-  ALL_TAGS_FILTER,
-  UNTAGGED_TAGS_FILTER,
-} from "./task-filter-constants";
+import { ALL_TAGS_FILTER, UNTAGGED_TAGS_FILTER } from "./task-filter-constants";
 
 export default function FilterTasks({
   isFilterExpanded,
@@ -20,7 +17,7 @@ export default function FilterTasks({
 }) {
   return (
     <form
-      className="animate-fade-in mb-6 rounded-sm border border-neutral-800 bg-neutral-900/20 p-4"
+      className="animate-fade-in mb-6"
       hidden={!isFilterExpanded}
       onSubmit={(event) => event.preventDefault()}
     >

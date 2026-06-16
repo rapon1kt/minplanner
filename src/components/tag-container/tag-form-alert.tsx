@@ -36,7 +36,7 @@ export default function TagFormAlert({ result }: { result: TagFormState }) {
 
     const timer = setTimeout(() => {
       setDismissedMessageKey(messageKey);
-    }, 8000);
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, [isVisible, messageKey, result.message]);

@@ -1,5 +1,5 @@
 import { authProviders, isConfiguredAuthProvider, signIn } from "@/lib/auth";
-import { ProviderIcon } from "@/components/provider-icon";
+import { ProviderIcon } from "@/components/icons/provider-icon";
 import {
   SignInSearchParams,
   getAuthMessage,

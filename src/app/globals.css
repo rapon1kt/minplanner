@@ -4,7 +4,7 @@
   --font-space: var(--font-space);
   --font-barlow: var(--font-barlow);
   --animate-fade-in: fade-in 0.3s ease-in-out forwards;
-  --animate-progress-timer: progress-timer 8000ms linear forwards;
+  --animate-progress-timer: progress-timer 3000ms linear forwards;
 
   @keyframes fade-in {
     from {
