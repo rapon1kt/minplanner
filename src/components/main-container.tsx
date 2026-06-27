@@ -1,7 +1,10 @@
 import { Tag, Task } from "@/core/domain/models";
-import TaskContainer from "./task-container/task-container";
-import Loading from "./loading";
-import TagContainer from "./tag-container/tag-container";
+import {
+  TaskContainer,
+  TagContainer,
+  CalendarContainer,
+  Loading,
+} from "@/components";
 
 export default function MainContainer({
   activeTab,
@@ -17,8 +20,8 @@ export default function MainContainer({
       return <TaskContainer tasks={tasks} tags={tags} />;
     case "tags":
       return <TagContainer tags={tags} />;
-    // To do:
-    // - Implement Calendar-Container to see Tasks
+    case "calendar":
+      return <CalendarContainer tasks={tasks} tags={tags} />;
     default:
       return <Loading />;
   }
