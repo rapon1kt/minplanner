@@ -1,4 +1,4 @@
-import { signOut } from "@/lib/auth";
+import handleSignOut from "@/actions/auth/auth";
 import { LogOut } from "lucide-react";
 import { Session } from "next-auth";
 
@@ -7,11 +7,6 @@ interface HeaderProps {
 }
 
 export default function Header({ session }: HeaderProps) {
-  const handleSignOut = async () => {
-    "use server";
-    await signOut({ redirectTo: "/sign-in" });
-  };
-
   return (
     <header className="flex justify-between items-center border-b border-neutral-800">
       <div className="px-6 py-8">

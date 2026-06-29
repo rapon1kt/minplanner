@@ -1,4 +1,9 @@
-export { default as Loading } from "./loading";
-export { default as TaskContainer } from "./task-container/task-container";
-export { default as TagContainer } from "./tag-container/tag-container";
-export { default as CalendarContainer } from "./calendar-container/calendar-container";
+export { TaskContainer, TagContainer, CalendarContainer } from "./containers";
+
+export { default as Loading } from "./loading/loading";
+export { default as Header } from "./header/header";
+export { default as Footer } from "./footer/footer";
+export { default as NavBar } from "./nav-bar/nav-bar";
+
+export { default as MainContainer } from "./main-container";
+export { default as HomeShell } from "./home-shell";

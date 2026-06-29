@@ -1,8 +1,7 @@
 "use client";
-import NavBar from "./nav-bar";
-import MainContainer from "./main-container";
 import { useState } from "react";
 import { Tag, Task } from "@/core/domain/models";
+import { NavBar, MainContainer } from "./";
 
 export default function HomeShell({
   tasks,
