@@ -1,8 +1,8 @@
 "use client";
 import type { Dispatch, SetStateAction } from "react";
 import type { Tag } from "@/core/domain/models";
+import { ALL_TAGS_FILTER, UNTAGGED_TAGS_FILTER } from "@/utils/filters";
 import { getRecordId } from "@/utils";
-import { ALL_TAGS_FILTER, UNTAGGED_TAGS_FILTER } from "./task-filter-constants";
 
 export default function FilterTasks({
   isFilterExpanded,
