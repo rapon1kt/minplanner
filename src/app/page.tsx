@@ -1,9 +1,7 @@
-import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
-import Header from "@/components/header";
-import HomeShell from "@/components/home-shell";
-import Footer from "@/components/footer";
 import { homeService } from "@/services";
+import { redirect } from "next/navigation";
+import { Footer, Header, HomeShell } from "@/components";
 
 export default async function Home() {
   const session = await auth();
