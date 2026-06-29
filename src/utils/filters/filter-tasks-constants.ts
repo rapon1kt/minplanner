@@ -1,5 +1,5 @@
 import { Task } from "@/core/domain/models";
-import { getDailyTasks, getWeekTasks } from "@/utils";
+import { getDailyTasks, getWeekTasks } from "./filter-tasks";
 
 export const ALL_TAGS_FILTER = "all";
 export const TODAY_TAGS_FILTER = "today";
