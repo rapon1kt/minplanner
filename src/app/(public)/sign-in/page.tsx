@@ -1,12 +1,13 @@
-import { authProviders, isConfiguredAuthProvider, signIn } from "@/lib/auth";
+import { handleSignIn } from "@/actions/auth/auth";
 import { ProviderIcon } from "@/components/icons/provider-icon";
+import { authProviders } from "@/lib/auth";
 import {
   SignInSearchParams,
   getAuthMessage,
   getFirstSearchParam,
   getSafeCallbackUrl,
 } from "@/utils/auth/auth";
-import { redirect } from "next/navigation";
+import Link from "next/link";
 
 type SignInProps = {
   searchParams?: Promise<SignInSearchParams>;
@@ -23,101 +24,77 @@ export default async function SignIn({ searchParams }: SignInProps) {
     (provider) => provider.configured,
   );
 
-  async function handleSignIn(formData: FormData) {
-    "use server";
-    const provider = formData.get("provider")?.toString();
-    const callbackUrl = getSafeCallbackUrl(
-      formData.get("callbackUrl")?.toString(),
-    );
-
-    if (!isConfiguredAuthProvider(provider)) {
-      const errorParams = new URLSearchParams({
-        callbackUrl,
-        error: "InvalidProvider",
-      });
-
-      redirect(`/sign-in?${errorParams.toString()}`);
-    }
-
-    await signIn(provider, { redirectTo: callbackUrl });
-  }
-
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-neutral-950 px-6 py-10 text-neutral-100">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(127,29,29,0.34),transparent_36%),radial-gradient(circle_at_bottom_right,rgba(64,64,64,0.28),transparent_34%)]" />
-      <div className="absolute left-1/2 top-0 h-px w-2/3 -translate-x-1/2 bg-linear-to-r from-transparent via-red-900/70 to-transparent" />
-
-      <main className="relative w-full max-w-md">
-        <div className="mb-3 text-center">
-          <p className="mb-3 font-barlow text-xs uppercase text-red-900">
-            MinPlanner
-          </p>
-          <h1 className="font-space text-5xl tracking-tight text-neutral-100">
-            Login
-          </h1>
-          <p className="mt-3 font-barlow text-sm leading-6 text-neutral-400">
+    <main className="flex flex-col items-center h-dvh">
+      <section className="flex-1 flex flex-col justify-center gap-4">
+        <div className="w-100 space-y-4">
+          <h1 className="text-4xl font-medium font-rubik underline">Login</h1>
+          <p className="text-neutral-800">
             Organize your routine with a secure account tied to a verified
             identity provider.
           </p>
         </div>
-
-        <section className="p-3">
-          {authMessage && (
-            <div
-              role="alert"
-              className="mb-5 rounded-2xl border border-red-950/80 bg-red-950/20 p-4"
-            >
-              <p className="font-space text-sm text-red-100">
-                {authMessage.title}
-              </p>
-              <p className="mt-1 font-barlow text-sm leading-5 text-red-100/70">
-                {authMessage.description}
-              </p>
-            </div>
-          )}
-
-          {configuredProviders.length > 0 ? (
-            <div className="space-y-3">
-              {configuredProviders.map((provider) => (
-                <form key={provider.id} action={handleSignIn}>
-                  <input type="hidden" name="provider" value={provider.id} />
-                  <input type="hidden" name="callbackUrl" value={callbackUrl} />
-                  <button className="group flex w-full cursor-pointer items-center justify-between rounded-lg border border-neutral-800 bg-neutral-900/40 px-4 py-3 text-left transition hover:border-neutral-700 hover:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-red-950">
-                    <span className="flex items-center gap-3">
-                      <span className="flex size-10 items-center justify-center rounded-sm border border-neutral-800 bg-neutral-950 text-neutral-100 transition group-hover:border-neutral-700">
-                        <ProviderIcon provider={provider.id} />
+        {authMessage && (
+          <div
+            role="alert"
+            className="mb-2 w-100 border border-black/10 p-2 rounded-md"
+          >
+            <p className="text-sm font-medium">{authMessage.title}</p>
+            <p className="mt-1 text-sm leading-5 text-neutral-800">
+              {authMessage.description}
+            </p>
+          </div>
+        )}
+        {configuredProviders.length > 0 ? (
+          <div className="space-y-3 w-100">
+            {configuredProviders.map((provider) => (
+              <form key={provider.id} action={handleSignIn}>
+                <input type="hidden" name="provider" value={provider.id} />
+                <input type="hidden" name="callbackUrl" value={callbackUrl} />
+                <button className="flex w-100 text-start p-3 transition-all cursor-pointer border border-black/10 hover:bg-black/8 rounded-lg">
+                  <span className="flex items-center gap-3">
+                    <span className="mx-2">
+                      <ProviderIcon provider={provider.id} />
+                    </span>
+                    <span className="flex flex-col">
+                      <span className="font-medium">
+                        Continue with {provider.name}
                       </span>
-                      <span>
-                        <span className="block font-barlow text-sm font-medium text-neutral-100">
-                          Continue with {provider.name}
-                        </span>
-                        <span className="mt-0.5 block font-barlow text-xs text-neutral-500">
-                          {provider.description}
-                        </span>
+                      <span className="text-sm text-neutral-600">
+                        {provider.description}
                       </span>
                     </span>
-                  </button>
-                </form>
-              ))}
-            </div>
-          ) : (
-            <div className="rounded-2xl border border-amber-900/60 bg-amber-950/20 p-4">
-              <p className="font-space text-sm text-amber-100">
-                No sign-in providers are configured.
-              </p>
-              <p className="mt-1 font-barlow text-sm leading-5 text-amber-100/70">
-                Add GitHub or Google OAuth credentials before signing in.
-              </p>
-            </div>
-          )}
-
-          <p className="mt-5 border-t border-neutral-900 pt-4 font-barlow text-xs leading-5 text-neutral-500">
-            MinPlanner only stores the identity data needed to recognize your
-            account. We will NEVER ask for any additional information without
-            your consent.
-          </p>
-        </section>
-      </main>
-    </div>
+                  </span>
+                </button>
+              </form>
+            ))}
+          </div>
+        ) : (
+          <div className="w-100 border border-black/10 p-2 rounded-sm">
+            <p className="font-medium font-rubik">
+              No sign-in providers are configured.
+            </p>
+            <p className="text-neutral-800 text-sm">
+              Please try reloading the page. If the error persists, contact our{" "}
+              <Link
+                className="underline text-blue-500"
+                href="https://github.com/rapon1kt/minplanner/issues"
+              >
+                support team
+              </Link>
+              .
+            </p>
+          </div>
+        )}
+        <p className="w-100 text-justify text-xs text-neutral-600">
+          MinPlanner only stores the identity data needed to recognize your
+          account. We will NEVER ask for any additional information without your
+          consent.
+        </p>
+      </section>
+      <footer className="text-xs py-4">
+        &copy; {new Date().getFullYear()} MinPlanner
+      </footer>
+    </main>
   );
 }

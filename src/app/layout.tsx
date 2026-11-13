@@ -1,18 +1,17 @@
 import type { Metadata } from "next";
-import { Barlow, Space_Grotesk } from "next/font/google";
+import { Inter, Rubik } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
-const barlow = Barlow({
-  weight: ["100", "200", "400", "500"],
+const inter = Inter({
+  weight: ["200", "400", "500"],
   subsets: ["latin"],
-  variable: "--font-barlow",
 });
 
-const space = Space_Grotesk({
-  weight: ["600", "700"],
+const rubik = Rubik({
+  weight: ["500", "700", "800"],
   subsets: ["latin"],
-  variable: "--font-space",
+  variable: "--font-rubik",
 });
 
 export const metadata: Metadata = {
@@ -28,7 +27,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`antialiased font-sans ${barlow.variable} ${space.variable}`}
+      className={`antialiased bg-white text-black ${inter.className} ${rubik.variable}`}
     >
       <body>
         {children}
