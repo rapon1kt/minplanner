@@ -56,7 +56,7 @@ export default function TaskTopBar({
       <div className="mb-6">
         <p className="flex items-center gap-2 font-barlow text-sm uppercase tracking-widest text-red-900">
           <Check size={16} />
-          Tags
+          Tasks
         </p>
         <h1 className="mt-1 font-space text-3xl text-neutral-300">
           List your tasks here!
